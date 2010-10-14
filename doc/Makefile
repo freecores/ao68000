@@ -12,7 +12,7 @@ help:
 	@echo -e "Available operations:"
 	@echo -e "unpack       \t- unpack generated doxygen HTML documentation."
 	@echo -e "doxygen      \t- run the doxygen tool on the ao68000 project."
-	@echo -e "             \t- Doxverilog version required."
+	@echo -e "             \t  Doxverilog version required."
 	@echo -e "view         \t- open generated doxygen HTML documentation in a browser."
 	@echo -e "spec_extract \t- generate the specification.odt file from the HTML docs."
 	@echo
