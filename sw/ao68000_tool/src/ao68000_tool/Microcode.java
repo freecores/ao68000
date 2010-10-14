@@ -1228,10 +1228,10 @@ public class Microcode {
                         .SIZE_WORD().EA_REG_3b100().EA_MOD_3b111().EA_TYPE_ALL()
                         .BRANCH_procedure().PROCEDURE_wait_prefetch_valid_32();
 
-        p               .OP1_FROM_IMMEDIATE()
-                        .ALU_SIMPLE_MOVE();
-
         p               .BRANCH_result().offset("dbcc_condition_true");
+
+        p                       .OP1_FROM_IMMEDIATE()
+                                .ALU_SIMPLE_MOVE();
 
         p                       .OP2_FROM_OP1()
                                 .OP1_FROM_RESULT();
