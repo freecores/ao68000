@@ -22,9 +22,11 @@ help:
 tb_ao68000_with_winuae:
 	$(foreach i,$(COUNT_LIST), mkdir -p $(DEST_DIR)/tb_ao68000_$(i); )
 	$(foreach i,$(COUNT_LIST), mkdir -p $(DEST_DIR)/tb_ao68000_$(i)/microcode; )
+	$(foreach i,$(COUNT_LIST), mkdir -p $(DEST_DIR)/tb_ao68000_$(i)/altera_specific; )
 	$(foreach i,$(COUNT_LIST), mkdir -p $(DEST_DIR)/tb_ao68000_$(i)/bin; )
 	$(foreach i,$(COUNT_LIST), mkdir -p $(DEST_DIR)/tb_ao68000_$(i)/vcd; )
 	$(foreach i,$(COUNT_LIST), cp $(AO68000_BASE)/rtl/verilog/ao68000/microcode/microcode.mif $(DEST_DIR)/tb_ao68000_$(i)/microcode; )
+	$(foreach i,$(COUNT_LIST), cp $(AO68000_BASE)/rtl/verilog/ao68000/altera_specific/empty_ram.mif $(DEST_DIR)/tb_ao68000_$(i)/altera_specific; )
 	$(foreach i,$(COUNT_LIST), echo -e "#!/bin/bash\n$(AO68000_BASE)/sim/rtl_sim/run/tb_ao68000/tb_ao68000 \$$@" \
 		> $(DEST_DIR)/tb_ao68000_$(i)/bin/run.sh; \
 	)
