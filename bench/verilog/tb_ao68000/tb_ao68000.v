@@ -30,7 +30,7 @@ module tb_ao68000();
 
 // inputs
 reg clk;
-reg rst;
+reg rst_n;
 reg [31:0] data_in;
 reg ack;
 wire err;
@@ -55,7 +55,7 @@ wire blocked_output;
 
 ao68000 ao68000_m(
 	.CLK_I(clk),
-	.RST_I(rst),
+	.reset_n(rst_n),
 
 	.DAT_I(data_in),
 	.ACK_I(ack),
@@ -235,8 +235,8 @@ initial begin
 	$dumpvars(0);
 	$dumpon();
 
-	rst = 1'b1;
-	#10 rst = 1'b0;
+	rst_n = 1'b0;
+	#10 rst_n = 1'b1;
 
 	while(ao68000_m.microcode_branch_m.micro_pc_0 != `MICROPC_MAIN_LOOP) #10;
 
