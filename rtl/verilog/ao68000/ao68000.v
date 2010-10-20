@@ -35,32 +35,32 @@
  */
 module ao68000 (
     //****************** WISHBONE
-    input CLK_I,                        //% \copydoc CLK_I
-    input RST_I,                        //% \copydoc RST_I
+    input           CLK_I,              //% \copydoc CLK_I
+    input           reset_n,            //% \copydoc reset_n
 
-    output CYC_O,                       //% \copydoc CYC_O
-    output [31:2] ADR_O,                //% \copydoc ADR_O
-    output [31:0] DAT_O,                //% \copydoc DAT_O
-    input [31:0] DAT_I,                 //% \copydoc DAT_I
-    output [3:0] SEL_O,                 //% \copydoc SEL_O
-    output STB_O,                       //% \copydoc STB_O
-    output WE_O,                        //% \copydoc WE_O
+    output          CYC_O,              //% \copydoc CYC_O
+    output  [31:2]  ADR_O,              //% \copydoc ADR_O
+    output  [31:0]  DAT_O,              //% \copydoc DAT_O
+    input   [31:0]  DAT_I,              //% \copydoc DAT_I
+    output  [3:0]   SEL_O,              //% \copydoc SEL_O
+    output          STB_O,              //% \copydoc STB_O
+    output          WE_O,               //% \copydoc WE_O
 
-    input ACK_I,                        //% \copydoc ACK_I
-    input ERR_I,                        //% \copydoc ERR_I
-    input RTY_I,                        //% \copydoc RTY_I
+    input           ACK_I,              //% \copydoc ACK_I
+    input           ERR_I,              //% \copydoc ERR_I
+    input           RTY_I,              //% \copydoc RTY_I
 
     // TAG_TYPE: TGC_O
-    output SGL_O,                       //% \copydoc SGL_O
-    output BLK_O,                       //% \copydoc BLK_O
-    output RMW_O,                       //% \copydoc RMW_O
+    output          SGL_O,              //% \copydoc SGL_O
+    output          BLK_O,              //% \copydoc BLK_O
+    output          RMW_O,              //% \copydoc RMW_O
 
     // TAG_TYPE: TGA_O
-    output [2:0] CTI_O,                 //% \copydoc CTI_O
-    output [1:0] BTE_O,                 //% \copydoc BTE_O
+    output [2:0]    CTI_O,              //% \copydoc CTI_O
+    output [1:0]    BTE_O,              //% \copydoc BTE_O
 
     // TAG_TYPE: TGC_O
-    output [2:0] fc_o,                  //% \copydoc fc_o
+    output [2:0]    fc_o,               //% \copydoc fc_o
     
     //****************** OTHER
     /* interrupt acknowlege:
@@ -68,283 +68,283 @@ module ao68000 (
      * ERR_I: spurious interrupt
      * RTY_I: autovector
      */
-    input [2:0] ipl_i,                  //% \copydoc ipl_i
-    output reset_o,                     //% \copydoc reset_o
-    output blocked_o                    //% \copydoc blocked_o
+    input [2:0]     ipl_i,              //% \copydoc ipl_i
+    output          reset_o,            //% \copydoc reset_o
+    output          blocked_o           //% \copydoc blocked_o
 );
 
 wire [15:0] sr;
-wire [1:0] size;
+wire [1:0]  size;
 wire [31:0] address;
-wire address_type;
-wire read_modify_write_flag;
+wire        address_type;
+wire        read_modify_write_flag;
 wire [31:0] data_read;
 wire [31:0] data_write;
 wire [31:0] pc;
-wire prefetch_ir_valid;
+wire        prefetch_ir_valid;
 wire [79:0] prefetch_ir;
-wire do_reset;
-wire do_read;
-wire do_write;
-wire do_interrupt;
-wire do_blocked;
-wire jmp_address_trap;
-wire jmp_bus_trap;
-wire finished;
-wire [7:0] interrupt_trap;
-wire [2:0] interrupt_mask;
-wire rw_state;
-wire [2:0] fc_state;
-wire [7:0] decoder_trap;
+wire        do_reset;
+wire        do_read;
+wire        do_write;
+wire        do_interrupt;
+wire        do_blocked;
+wire        jmp_address_trap;
+wire        jmp_bus_trap;
+wire        finished;
+wire [7:0]  interrupt_trap;
+wire [2:0]  interrupt_mask;
+wire        rw_state;
+wire [2:0]  fc_state;
+wire [7:0]  decoder_trap;
 wire [31:0] usp;
 wire [31:0] Dn_output;
 wire [31:0] An_output;
 wire [31:0] result;
-wire [3:0] An_address;
+wire [3:0]  An_address;
 wire [31:0] An_input;
-wire [2:0] Dn_address;
+wire [2:0]  Dn_address;
 wire [15:0] ir;
-wire [8:0] decoder_micropc;
-wire [1:0] special;
-wire [8:0] load_ea;
-wire [8:0] perform_ea_read;
-wire [8:0] perform_ea_write;
-wire [8:0] save_ea;
-wire trace_flag;
-wire group_0_flag;
-wire stop_flag;
-wire [8:0] micro_pc;
+wire [8:0]  decoder_micropc;
+wire [1:0]  special;
+wire [8:0]  load_ea;
+wire [8:0]  perform_ea_read;
+wire [8:0]  perform_ea_write;
+wire [8:0]  save_ea;
+wire        trace_flag;
+wire        group_0_flag;
+wire        stop_flag;
+wire [8:0]  micro_pc;
 wire [31:0] operand1;
 wire [31:0] operand2;
-wire [4:0] movem_loop;
+wire [4:0]  movem_loop;
 wire [15:0] movem_reg;
-wire condition;
+wire        condition;
 wire [87:0] micro_data;
 wire [31:0] fault_address_state;
-wire [1:0] pc_change;
-wire prefetch_ir_valid_32;
-wire [3:0] ea_type;
-wire [2:0] ea_mod;
-wire [2:0] ea_reg;
+wire [1:0]  pc_change;
+wire        prefetch_ir_valid_32;
+wire [3:0]  ea_type;
+wire [2:0]  ea_mod;
+wire [2:0]  ea_reg;
 
 bus_control bus_control_m(
-    .CLK_I(CLK_I),
-    .RST_I(RST_I),
-    .CYC_O(CYC_O),
-    .ADR_O(ADR_O),
-    .DAT_O(DAT_O),
-    .DAT_I(DAT_I),
-    .SEL_O(SEL_O),
-    .STB_O(STB_O),
-    .WE_O(WE_O),
-    .ACK_I(ACK_I),
-    .ERR_I(ERR_I),
-    .RTY_I(RTY_I),
-    .SGL_O(SGL_O),
-    .BLK_O(BLK_O),
-    .RMW_O(RMW_O),
-    .CTI_O(CTI_O),
-    .BTE_O(BTE_O),
-    .fc_o(fc_o),
-    .ipl_i(ipl_i),
-    .reset_o(reset_o),
-    .blocked_o(blocked_o),
+    .CLK_I                  (CLK_I),
+    .reset_n                (reset_n),
+    .CYC_O                  (CYC_O),
+    .ADR_O                  (ADR_O),
+    .DAT_O                  (DAT_O),
+    .DAT_I                  (DAT_I),
+    .SEL_O                  (SEL_O),
+    .STB_O                  (STB_O),
+    .WE_O                   (WE_O),
+    .ACK_I                  (ACK_I),
+    .ERR_I                  (ERR_I),
+    .RTY_I                  (RTY_I),
+    .SGL_O                  (SGL_O),
+    .BLK_O                  (BLK_O),
+    .RMW_O                  (RMW_O),
+    .CTI_O                  (CTI_O),
+    .BTE_O                  (BTE_O),
+    .fc_o                   (fc_o),
+    .ipl_i                  (ipl_i),
+    .reset_o                (reset_o),
+    .blocked_o              (blocked_o),
 
-    .supervisor_i(sr[13]),
-    .ipm_i(sr[10:8]),
-    .size_i(size),
-    .address_i(address),
-    .address_type_i(address_type),
-    .read_modify_write_i(read_modify_write_flag),
-    .data_write_i(data_write),
-    .data_read_o(data_read),
-    .pc_i(pc),
-    .pc_change_i(pc_change),
-    .prefetch_ir_o(prefetch_ir),
-    .prefetch_ir_valid_32_o(prefetch_ir_valid_32),
-    .prefetch_ir_valid_o(prefetch_ir_valid),
-    .prefetch_ir_valid_80_o(),
-    .do_reset_i(do_reset),
-    .do_blocked_i(do_blocked),
-    .do_read_i(do_read),
-    .do_write_i(do_write),
-    .do_interrupt_i(do_interrupt),
-    .jmp_address_trap_o(jmp_address_trap),
-    .jmp_bus_trap_o(jmp_bus_trap),
-    .finished_o(finished),
-    .interrupt_trap_o(interrupt_trap),
-    .interrupt_mask_o(interrupt_mask),
-    .rw_state_o(rw_state),
-    .fc_state_o(fc_state),
-    .fault_address_state_o(fault_address_state)
+    .supervisor_i           (sr[13]),
+    .ipm_i                  (sr[10:8]),
+    .size_i                 (size),
+    .address_i              (address),
+    .address_type_i         (address_type),
+    .read_modify_write_i    (read_modify_write_flag),
+    .data_write_i           (data_write),
+    .data_read_o            (data_read),
+    .pc_i                   (pc),
+    .pc_change_i            (pc_change),
+    .prefetch_ir_o          (prefetch_ir),
+    .prefetch_ir_valid_32_o (prefetch_ir_valid_32),
+    .prefetch_ir_valid_o    (prefetch_ir_valid),
+    .prefetch_ir_valid_80_o (),
+    .do_reset_i             (do_reset),
+    .do_blocked_i           (do_blocked),
+    .do_read_i              (do_read),
+    .do_write_i             (do_write),
+    .do_interrupt_i         (do_interrupt),
+    .jmp_address_trap_o     (jmp_address_trap),
+    .jmp_bus_trap_o         (jmp_bus_trap),
+    .finished_o             (finished),
+    .interrupt_trap_o       (interrupt_trap),
+    .interrupt_mask_o       (interrupt_mask),
+    .rw_state_o             (rw_state),
+    .fc_state_o             (fc_state),
+    .fault_address_state_o  (fault_address_state)
 );
 
 registers registers_m(
-    .clock(CLK_I),
-    .reset(RST_I),
-    .data_read(data_read),
-    .prefetch_ir(prefetch_ir),
-    .prefetch_ir_valid(prefetch_ir_valid),
-    .result(result),
-    .sr(sr),
-    .rw_state(rw_state),
-    .fc_state(fc_state),
-    .fault_address_state(fault_address_state),
-    .interrupt_trap(interrupt_trap),
-    .interrupt_mask(interrupt_mask),
-    .decoder_trap(decoder_trap),
-    .usp(usp),
-    .Dn_output(Dn_output),
-    .An_output(An_output),
+    .clock                          (CLK_I),
+    .reset_n                        (reset_n),
+    .data_read                      (data_read),
+    .prefetch_ir                    (prefetch_ir),
+    .prefetch_ir_valid              (prefetch_ir_valid),
+    .result                         (result),
+    .sr                             (sr),
+    .rw_state                       (rw_state),
+    .fc_state                       (fc_state),
+    .fault_address_state            (fault_address_state),
+    .interrupt_trap                 (interrupt_trap),
+    .interrupt_mask                 (interrupt_mask),
+    .decoder_trap                   (decoder_trap),
+    .usp                            (usp),
+    .Dn_output                      (Dn_output),
+    .An_output                      (An_output),
 
-    .pc_change(pc_change),
+    .pc_change                      (pc_change),
 
-    .ea_reg(ea_reg),
-    .ea_reg_control(`MICRO_DATA_ea_reg),
-    .ea_mod(ea_mod),
-    .ea_mod_control(`MICRO_DATA_ea_mod),
-    .ea_type(ea_type),
-    .ea_type_control(`MICRO_DATA_ea_type),
-    .operand1(operand1),
-    .operand1_control(`MICRO_DATA_op1),
-    .operand2(operand2),
-    .operand2_control(`MICRO_DATA_op2),
-    .address(address),
-    .address_type(address_type),
-    .address_control(`MICRO_DATA_address),
-    .size(size),
-    .size_control(`MICRO_DATA_size),
-    .movem_modreg(),
-    .movem_modreg_control(`MICRO_DATA_movem_modreg),
-    .movem_loop(movem_loop),
-    .movem_loop_control(`MICRO_DATA_movem_loop),
-    .movem_reg(movem_reg),
-    .movem_reg_control(`MICRO_DATA_movem_reg),
-    .ir(ir),
-    .ir_control(`MICRO_DATA_ir),
-    .pc(pc),
-    .pc_control(`MICRO_DATA_pc),
-    .trap(),
-    .trap_control(`MICRO_DATA_trap),
-    .offset(),
-    .offset_control(`MICRO_DATA_offset),
-    .index(),
-    .index_control(`MICRO_DATA_index),
-    .stop_flag(stop_flag),
-    .stop_flag_control(`MICRO_DATA_stop_flag),
-    .trace_flag(trace_flag),
-    .trace_flag_control(`MICRO_DATA_trace_flag),
-    .group_0_flag(group_0_flag),
-    .group_0_flag_control(`MICRO_DATA_group_0_flag),
-    .instruction_flag(),
-    .instruction_flag_control(`MICRO_DATA_instruction_flag),
-    .read_modify_write_flag(read_modify_write_flag),
-    .read_modify_write_flag_control(`MICRO_DATA_read_modify_write_flag),
-    .do_reset_flag(do_reset),
-    .do_reset_flag_control(`MICRO_DATA_do_reset_flag),
-    .do_interrupt_flag(do_interrupt),
-    .do_interrupt_flag_control(`MICRO_DATA_do_interrupt_flag),
-    .do_read_flag(do_read),
-    .do_read_flag_control(`MICRO_DATA_do_read_flag),
-    .do_write_flag(do_write),
-    .do_write_flag_control(`MICRO_DATA_do_write_flag),
-    .do_blocked_flag(do_blocked),
-    .do_blocked_flag_control(`MICRO_DATA_do_blocked_flag),
-    .data_write(data_write),
-    .data_write_control(`MICRO_DATA_data_write),
-    .An_address(An_address),
-    .An_address_control(`MICRO_DATA_an_address),
-    .An_input(An_input),
-    .An_input_control(`MICRO_DATA_an_input),
-    .Dn_address(Dn_address),
-    .Dn_address_control(`MICRO_DATA_dn_address)
+    .ea_reg                         (ea_reg),
+    .ea_reg_control                 (`MICRO_DATA_ea_reg),
+    .ea_mod                         (ea_mod),
+    .ea_mod_control                 (`MICRO_DATA_ea_mod),
+    .ea_type                        (ea_type),
+    .ea_type_control                (`MICRO_DATA_ea_type),
+    .operand1                       (operand1),
+    .operand1_control               (`MICRO_DATA_op1),
+    .operand2                       (operand2),
+    .operand2_control               (`MICRO_DATA_op2),
+    .address                        (address),
+    .address_type                   (address_type),
+    .address_control                (`MICRO_DATA_address),
+    .size                           (size),
+    .size_control                   (`MICRO_DATA_size),
+    .movem_modreg                   (),
+    .movem_modreg_control           (`MICRO_DATA_movem_modreg),
+    .movem_loop                     (movem_loop),
+    .movem_loop_control             (`MICRO_DATA_movem_loop),
+    .movem_reg                      (movem_reg),
+    .movem_reg_control              (`MICRO_DATA_movem_reg),
+    .ir                             (ir),
+    .ir_control                     (`MICRO_DATA_ir),
+    .pc                             (pc),
+    .pc_control                     (`MICRO_DATA_pc),
+    .trap                           (),
+    .trap_control                   (`MICRO_DATA_trap),
+    .offset                         (),
+    .offset_control                 (`MICRO_DATA_offset),
+    .index                          (),
+    .index_control                  (`MICRO_DATA_index),
+    .stop_flag                      (stop_flag),
+    .stop_flag_control              (`MICRO_DATA_stop_flag),
+    .trace_flag                     (trace_flag),
+    .trace_flag_control             (`MICRO_DATA_trace_flag),
+    .group_0_flag                   (group_0_flag),
+    .group_0_flag_control           (`MICRO_DATA_group_0_flag),
+    .instruction_flag               (),
+    .instruction_flag_control       (`MICRO_DATA_instruction_flag),
+    .read_modify_write_flag         (read_modify_write_flag),
+    .read_modify_write_flag_control (`MICRO_DATA_read_modify_write_flag),
+    .do_reset_flag                  (do_reset),
+    .do_reset_flag_control          (`MICRO_DATA_do_reset_flag),
+    .do_interrupt_flag              (do_interrupt),
+    .do_interrupt_flag_control      (`MICRO_DATA_do_interrupt_flag),
+    .do_read_flag                   (do_read),
+    .do_read_flag_control           (`MICRO_DATA_do_read_flag),
+    .do_write_flag                  (do_write),
+    .do_write_flag_control          (`MICRO_DATA_do_write_flag),
+    .do_blocked_flag                (do_blocked),
+    .do_blocked_flag_control        (`MICRO_DATA_do_blocked_flag),
+    .data_write                     (data_write),
+    .data_write_control             (`MICRO_DATA_data_write),
+    .An_address                     (An_address),
+    .An_address_control             (`MICRO_DATA_an_address),
+    .An_input                       (An_input),
+    .An_input_control               (`MICRO_DATA_an_input),
+    .Dn_address                     (Dn_address),
+    .Dn_address_control             (`MICRO_DATA_dn_address)
 );
 
 memory_registers memory_registers_m(
-    .clock(CLK_I),
-    .reset(RST_I),
-    .An_address(An_address),
-    .An_input(An_input),
-    .An_write_enable(`MICRO_DATA_an_write_enable),
-    .An_output(An_output),
-    .usp(usp),
-    .Dn_address(Dn_address),
-    .Dn_input(result),
-    .Dn_write_enable(`MICRO_DATA_dn_write_enable),
-    .Dn_size(size),
-    .Dn_output(Dn_output),
-    .micro_pc(micro_pc),
-    .micro_data(micro_data)
+    .clock              (CLK_I),
+    .reset_n            (reset_n),
+    .An_address         (An_address),
+    .An_input           (An_input),
+    .An_write_enable    (`MICRO_DATA_an_write_enable),
+    .An_output          (An_output),
+    .usp                (usp),
+    .Dn_address         (Dn_address),
+    .Dn_input           (result),
+    .Dn_write_enable    (`MICRO_DATA_dn_write_enable),
+    .Dn_size            (size),
+    .Dn_output          (Dn_output),
+    .micro_pc           (micro_pc),
+    .micro_data         (micro_data)
 );
 
 decoder decoder_m(
-    .clock(CLK_I),
-    .reset(RST_I),
-    .supervisor(sr[13]),
-    .ir(prefetch_ir[79:64]),
-    .decoder_trap(decoder_trap),
-    .decoder_micropc(decoder_micropc),
+    .clock              (CLK_I),
+    .reset_n            (reset_n),
+    .supervisor         (sr[13]),
+    .ir                 (prefetch_ir[79:64]),
+    .decoder_trap       (decoder_trap),
+    .decoder_micropc    (decoder_micropc),
     
-    .load_ea(load_ea),
-    .perform_ea_read(perform_ea_read),
-    .perform_ea_write(perform_ea_write),
-    .save_ea(save_ea),
+    .load_ea            (load_ea),
+    .perform_ea_read    (perform_ea_read),
+    .perform_ea_write   (perform_ea_write),
+    .save_ea            (save_ea),
     
-    .ea_type(ea_type),
-    .ea_mod(ea_mod),
-    .ea_reg(ea_reg)
+    .ea_type            (ea_type),
+    .ea_mod             (ea_mod),
+    .ea_reg             (ea_reg)
 );
 
 condition condition_m(
-    .cond(ir[11:8]),
-    .ccr(sr[7:0]),
-    .condition(condition)
+    .cond               (ir[11:8]),
+    .ccr                (sr[7:0]),
+    .condition          (condition)
 );
 
 alu alu_m(
-    .clock(CLK_I),
-    .reset(RST_I),
-    .address(address),
-    .ir(ir),
-    .size(size),
-    .operand1(operand1),
-    .operand2(operand2),
-    .interrupt_mask(interrupt_mask),
-    .alu_control(`MICRO_DATA_alu),
-    .sr(sr),
-    .result(result),
-    .special(special)
+    .clock              (CLK_I),
+    .reset_n            (reset_n),
+    .address            (address),
+    .ir                 (ir),
+    .size               (size),
+    .operand1           (operand1),
+    .operand2           (operand2),
+    .interrupt_mask     (interrupt_mask),
+    .alu_control        (`MICRO_DATA_alu),
+    .sr                 (sr),
+    .result             (result),
+    .special            (special)
 );
 
 microcode_branch microcode_branch_m(
-    .clock(CLK_I),
-    .reset(RST_I),
-    .movem_loop(movem_loop),
-    .movem_reg(movem_reg),
-    .operand2(operand2),
-    .special(special),
-    .condition(condition),
-    .result(result),
-    .overflow(sr[1]),
-    .stop_flag(stop_flag),
-    .ir(ir),
-    .decoder_trap(decoder_trap),
-    .trace_flag(trace_flag),
-    .group_0_flag(group_0_flag),
-    .interrupt_mask(interrupt_mask),
-    .load_ea(load_ea),
-    .perform_ea_read(perform_ea_read),
-    .perform_ea_write(perform_ea_write),
-    .save_ea(save_ea),
-    .decoder_micropc(decoder_micropc),
-    .prefetch_ir_valid_32(prefetch_ir_valid_32),
-    .prefetch_ir_valid(prefetch_ir_valid),
-    .jmp_address_trap(jmp_address_trap),
-    .jmp_bus_trap(jmp_bus_trap),
-    .finished(finished),
-    .branch_control(`MICRO_DATA_branch),
-    .branch_offset(`MICRO_DATA_procedure),
-    .micro_pc(micro_pc)
+    .clock                  (CLK_I),
+    .reset_n                (reset_n),
+    .movem_loop             (movem_loop),
+    .movem_reg              (movem_reg),
+    .operand2               (operand2),
+    .special                (special),
+    .condition              (condition),
+    .result                 (result),
+    .overflow               (sr[1]),
+    .stop_flag              (stop_flag),
+    .ir                     (ir),
+    .decoder_trap           (decoder_trap),
+    .trace_flag             (trace_flag),
+    .group_0_flag           (group_0_flag),
+    .interrupt_mask         (interrupt_mask),
+    .load_ea                (load_ea),
+    .perform_ea_read        (perform_ea_read),
+    .perform_ea_write       (perform_ea_write),
+    .save_ea                (save_ea),
+    .decoder_micropc        (decoder_micropc),
+    .prefetch_ir_valid_32   (prefetch_ir_valid_32),
+    .prefetch_ir_valid      (prefetch_ir_valid),
+    .jmp_address_trap       (jmp_address_trap),
+    .jmp_bus_trap           (jmp_bus_trap),
+    .finished               (finished),
+    .branch_control         (`MICRO_DATA_branch),
+    .branch_offset          (`MICRO_DATA_procedure),
+    .micro_pc               (micro_pc)
 );
 
 endmodule
@@ -372,14 +372,15 @@ endmodule
  * in the MC68000 User's Manual.
  *
  * Finally, bus_control controls also two ao68000 specific core outputs:
- *  - blocked output,  high when that the processor is blocked after encountering a double bus error. The only way to leave this block state is by reseting the ao68000 by the WISHBONE RST_I input signal.
+ *  - blocked output,  high when that the processor is blocked after encountering a double bus error. The only way
+ *    to leave this block state is by reseting the ao68000 by the WISHBONE reset input signal.
  *  - reset output, high when processing the RESET instruction. Can be used to reset external devices.
  */
 module bus_control(
     //******************************************* external
     //****************** WISHBONE
     input CLK_I,
-    input RST_I,
+    input reset_n,
 
     output reg CYC_O,
     output reg [31:2] ADR_O,
@@ -464,48 +465,48 @@ assign address_i_plus_4 = address_i + 32'd4;
 reg [1:0] saved_pc_change = 2'b00;
 
 parameter [4:0]
-    S_INIT         = 5'd0,
-    S_RESET        = 5'd1,
-    S_BLOCKED    = 5'd2,
-    S_INT_1        = 5'd3,
+    S_INIT      = 5'd0,
+    S_RESET     = 5'd1,
+    S_BLOCKED   = 5'd2,
+    S_INT_1     = 5'd3,
     S_READ_1    = 5'd4,
     S_READ_2    = 5'd5,
     S_READ_3    = 5'd6,
-    S_WAIT        = 5'd7,
-    S_WRITE_1    = 5'd8,
-    S_WRITE_2    = 5'd9,
-    S_WRITE_3    = 5'd10,
-    S_PC_0        = 5'd11,
-    S_PC_1        = 5'd12,
-    S_PC_2        = 5'd13,
-    S_PC_3        = 5'd14,
-    S_PC_4        = 5'd15,
-    S_PC_5        = 5'd16,
-    S_PC_6        = 5'd17;
+    S_WAIT      = 5'd7,
+    S_WRITE_1   = 5'd8,
+    S_WRITE_2   = 5'd9,
+    S_WRITE_3   = 5'd10,
+    S_PC_0      = 5'd11,
+    S_PC_1      = 5'd12,
+    S_PC_2      = 5'd13,
+    S_PC_3      = 5'd14,
+    S_PC_4      = 5'd15,
+    S_PC_5      = 5'd16,
+    S_PC_6      = 5'd17;
 
 parameter [2:0]
     FC_USER_DATA            = 3'd1,
-    FC_USER_PROGRAM            = 3'd2,
-    FC_SUPERVISOR_DATA        = 3'd5,        // all exception vector entries except reset
-    FC_SUPERVISOR_PROGRAM    = 3'd6,        // exception vector for reset
+    FC_USER_PROGRAM         = 3'd2,
+    FC_SUPERVISOR_DATA      = 3'd5,        // all exception vector entries except reset
+    FC_SUPERVISOR_PROGRAM   = 3'd6,        // exception vector for reset
     FC_CPU_SPACE            = 3'd7;        // interrupt acknowlege bus cycle
 
 parameter [2:0]
-    CTI_CLASSIC_CYCLE        = 3'd0,
-    CTI_CONST_CYCLE            = 3'd1,
-    CTI_INCR_CYCLE            = 3'd2,
+    CTI_CLASSIC_CYCLE       = 3'd0,
+    CTI_CONST_CYCLE         = 3'd1,
+    CTI_INCR_CYCLE          = 3'd2,
     CTI_END_OF_BURST        = 3'd7;
 
 parameter [7:0]
-    VECTOR_BUS_TRAP            = 8'd2,
-    VECTOR_ADDRESS_TRAP        = 8'd3;
+    VECTOR_BUS_TRAP         = 8'd2,
+    VECTOR_ADDRESS_TRAP     = 8'd3;
 
 reg [4:0] current_state;
 reg [7:0] reset_counter;
 
 reg [2:0] last_interrupt_mask;
-always @(posedge CLK_I) begin
-    if(RST_I == 1'b1) begin
+always @(posedge CLK_I or negedge reset_n) begin
+    if(reset_n == 1'b0) begin
         interrupt_mask_o <= 3'b000;
         last_interrupt_mask <= 3'b000;
     end
@@ -524,8 +525,8 @@ end
 
 // change pc_i in middle of prefetch operation: undefined
 
-always @(posedge CLK_I) begin
-    if(RST_I == 1'b1) begin
+always @(posedge CLK_I or negedge reset_n) begin
+    if(reset_n == 1'b0) begin
         current_state <= S_INIT;
         interrupt_trap_o <= 8'd0;
         prefetch_ir_valid_o <= 1'b0;
@@ -585,7 +586,7 @@ always @(posedge CLK_I) begin
                     if(address_i[0] == 1'b1 && (size_i == 2'b01 || size_i == 2'b10)) begin
                         fault_address_state_o <= address_i;
                         rw_state_o <= 1'b1;
-                        fc_state_o <= (supervisor_i == 1'b1) ?     ((address_type_i == 1'b0) ? FC_SUPERVISOR_DATA : FC_SUPERVISOR_PROGRAM) :
+                        fc_state_o <= (supervisor_i == 1'b1) ?  ((address_type_i == 1'b0) ? FC_SUPERVISOR_DATA : FC_SUPERVISOR_PROGRAM) :
                                                                 ((address_type_i == 1'b0) ? FC_USER_DATA : FC_USER_PROGRAM);
                         interrupt_trap_o <= VECTOR_ADDRESS_TRAP;
 
@@ -595,7 +596,13 @@ always @(posedge CLK_I) begin
                     else begin
                         CYC_O <= 1'b1;
                         ADR_O <= address_i[31:2];
-                        SEL_O <= 4'b1111;
+                        SEL_O <=    (size_i == 2'b00 && address_i[1:0] == 2'b00)?                   4'b1000 :
+                                    (size_i == 2'b00 && address_i[1:0] == 2'b01)?                   4'b0100 :
+                                    (size_i == 2'b00 && address_i[1:0] == 2'b10)?                   4'b0010 :
+                                    (size_i == 2'b00 && address_i[1:0] == 2'b11)?                   4'b0001 :
+                                    (size_i == 2'b01 && address_i[1] == 2'b0)?                      4'b1100 :
+                                    ((size_i == 2'b01 || size_i == 2'b10) && address_i[1] == 2'b1)? 4'b0011 :
+                                                                                                    4'b1111;
                         STB_O <= 1'b1;
 
                         if(read_modify_write_i == 1'b1) begin
@@ -807,9 +814,12 @@ always @(posedge CLK_I) begin
                 end
                 else begin
                     CYC_O <= 1'b1;
-                    if(prefetch_ir_valid_32_o == 1'b0)                        ADR_O <= pc_i[31:2];
-                    else                                                     ADR_O <= pc_i_plus_6[31:2];
-                    SEL_O <= 4'b1111;
+                    
+                    if(prefetch_ir_valid_32_o == 1'b0)                      ADR_O <= pc_i[31:2];
+                    else                                                    ADR_O <= pc_i_plus_6[31:2];
+                    
+                    SEL_O <=    (pc_i[1:0] == 2'b10)?   4'b0011 :
+                                                        4'b1111;
                     STB_O <= 1'b1;
 
                     if(prefetch_ir_valid_32_o == 1'b0) begin
@@ -839,7 +849,7 @@ always @(posedge CLK_I) begin
                     if(CTI_O == CTI_INCR_CYCLE) begin
                         //CYC_O <= 1'b1;
                         ADR_O <= pc_i_plus_4[31:2];
-                        //SEL_O <= 4'b1111;
+                        SEL_O <= 4'b1111;
                         //STB_O <= 1'b1;
                         //WE_O <= 1'b0;
 
@@ -859,7 +869,7 @@ always @(posedge CLK_I) begin
                         //if(supervisor_i == 1'b1)    fc_o <= FC_SUPERVISOR_PROGRAM;
                         //else                        fc_o <= FC_USER_PROGRAM;
 
-                        if(pc_i[1:0] == 2'b10)        prefetch_ir_o <= { DAT_I[15:0], 64'b0 };
+                        if(pc_i[1:0] == 2'b10)      prefetch_ir_o <= { DAT_I[15:0], 64'b0 };
                         else                        prefetch_ir_o <= { DAT_I[31:0], 48'b0 };
 
                         current_state <= S_PC_3;
@@ -925,7 +935,7 @@ always @(posedge CLK_I) begin
                     if(pc_i[1:0] == 2'b10) begin
                         //CYC_O <= 1'b1;
                         ADR_O <= pc_i_plus_6[31:2];
-                        //SEL_O <= 4'b1111;
+                        SEL_O <= 4'b1111;
                         //STB_O <= 1'b1;
                         //WE_O <= 1'b0;
 
@@ -1022,7 +1032,7 @@ always @(posedge CLK_I) begin
                     if(address_i[1:0] == 2'b10 && size_i == 2'b10) begin
                         //CYC_O <= 1'b1;
                         ADR_O <= address_i_plus_4[31:2];
-                        //SEL_O <= 4'b1111;
+                        SEL_O <= 4'b1100;
                         //STB_O <= 1'b1;
                         //WE_O <= 1'b0;
 
@@ -1237,7 +1247,7 @@ endmodule
  */
 module registers(
     input clock,
-    input reset,
+    input reset_n,
 
     input [31:0] data_read,
     input [79:0] prefetch_ir,
@@ -1349,61 +1359,91 @@ module registers(
     input Dn_address_control
 );
 
-always @(posedge clock) begin
-    if(reset)                                                     size <= 2'b00;
+reg [31:0] pc_valid;
+
+// pc_change connected
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0) begin
+        pc <= 32'd0;
+        pc_valid <= 32'd0;
+    end
+    else begin
+        if(pc_control == `PC_FROM_RESULT)                       pc = result;
+        else if(pc_control == `PC_INCR_BY_2)                    pc = pc + 32'd2;
+        else if(pc_control == `PC_INCR_BY_4)                    pc = pc + 32'd4;
+        else if(pc_control == `PC_INCR_BY_SIZE)                 pc = (size == 2'b00 || size == 2'b01) ? pc + 32'd2 : pc + 32'd4;
+        else if(pc_control == `PC_FROM_PREFETCH_IR)             pc = prefetch_ir[47:16];
+        else if(pc_control == `PC_INCR_BY_2_IN_MAIN_LOOP && prefetch_ir_valid == 1'b1 && decoder_trap == 8'd0 && stop_flag == 1'b0)
+                                                                pc = pc + 32'd2;
+        if(pc[0] == 1'b0)  pc_valid <= pc;
+    end
+end
+
+assign pc_change =
+    (    pc_control == `PC_FROM_RESULT || pc_control == `PC_FROM_PREFETCH_IR
+    ) ? 2'b11 :
+    (    pc_control == `PC_INCR_BY_4 || (pc_control == `PC_INCR_BY_SIZE && size == 2'b10)
+    ) ? 2'b10 :
+    (    pc_control == `PC_INCR_BY_2 || (pc_control == `PC_INCR_BY_SIZE && (size == 2'b00 || size == 2'b01)) ||
+        (pc_control == `PC_INCR_BY_2_IN_MAIN_LOOP && prefetch_ir_valid == 1'b1 && decoder_trap == 8'd0 && stop_flag == 1'b0)
+    ) ? 2'b01 :
+    2'b00;
+
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         size <= 2'b00;
     else if(size_control == `SIZE_BYTE)                         size <= 2'b00;
     else if(size_control == `SIZE_WORD)                         size <= 2'b01;
     else if(size_control == `SIZE_LONG)                         size <= 2'b10;
-    else if(size_control == `SIZE_1)                             size <= ( ir[7:6] == 2'b00 ) ? 2'b01 : 2'b10;
-    else if(size_control == `SIZE_1_PLUS)                         size <= ( ir[7:6] == 2'b10 ) ? 2'b01 : 2'b10;
-    else if(size_control == `SIZE_2)                             size <= ( ir[6] == 1'b0 ) ? 2'b01 : 2'b10;
-    else if(size_control == `SIZE_3)                             size <= ( ir[7:6] == 2'b00 ) ? 2'b00 : ( ( ir[7:6] == 2'b01 ) ? 2'b01 : 2'b10 );
-    else if(size_control == `SIZE_4)                             size <= ( ir[13:12] == 2'b01 ) ? 2'b00 : ( ( ir[13:12] == 2'b11 ) ? 2'b01 : 2'b10 );
-    else if(size_control == `SIZE_5)                             size <= ( ir[8] == 1'b0 ) ? 2'b01 : 2'b10;
-    else if(size_control == `SIZE_6)                             size <= ( ir[5:3] != 3'b000 ) ? 2'b00 : 2'b10;
+    else if(size_control == `SIZE_1)                            size <= ( ir[7:6] == 2'b00 ) ? 2'b01 : 2'b10;
+    else if(size_control == `SIZE_1_PLUS)                       size <= ( ir[7:6] == 2'b10 ) ? 2'b01 : 2'b10;
+    else if(size_control == `SIZE_2)                            size <= ( ir[6] == 1'b0 ) ? 2'b01 : 2'b10;
+    else if(size_control == `SIZE_3)                            size <= ( ir[7:6] == 2'b00 ) ? 2'b00 : ( ( ir[7:6] == 2'b01 ) ? 2'b01 : 2'b10 );
+    else if(size_control == `SIZE_4)                            size <= ( ir[13:12] == 2'b01 ) ? 2'b00 : ( ( ir[13:12] == 2'b11 ) ? 2'b01 : 2'b10 );
+    else if(size_control == `SIZE_5)                            size <= ( ir[8] == 1'b0 ) ? 2'b01 : 2'b10;
+    else if(size_control == `SIZE_6)                            size <= ( ir[5:3] != 3'b000 ) ? 2'b00 : 2'b10;
 end
 
-always @(posedge clock) begin
-    if(reset)                                                     ea_reg <= 3'b000;
-    else if(ea_reg_control == `EA_REG_IR_2_0)                    ea_reg <= ir[2:0];
-    else if(ea_reg_control == `EA_REG_IR_11_9)                    ea_reg <= ir[11:9];
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         ea_reg <= 3'b000;
+    else if(ea_reg_control == `EA_REG_IR_2_0)                   ea_reg <= ir[2:0];
+    else if(ea_reg_control == `EA_REG_IR_11_9)                  ea_reg <= ir[11:9];
     else if(ea_reg_control == `EA_REG_MOVEM_REG_2_0)            ea_reg <= movem_modreg[2:0];
     else if(ea_reg_control == `EA_REG_3b111)                    ea_reg <= 3'b111;
     else if(ea_reg_control == `EA_REG_3b100)                    ea_reg <= 3'b100;
 end
 
-always @(posedge clock) begin
-    if(reset)                                                    ea_mod <= 3'd000;
-    else if(ea_mod_control == `EA_MOD_IR_5_3)                    ea_mod <= ir[5:3];
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         ea_mod <= 3'b000;
+    else if(ea_mod_control == `EA_MOD_IR_5_3)                   ea_mod <= ir[5:3];
     else if(ea_mod_control == `EA_MOD_MOVEM_MOD_5_3)            ea_mod <= movem_modreg[5:3];
-    else if(ea_mod_control == `EA_MOD_IR_8_6)                    ea_mod <= ir[8:6];
-    else if(ea_mod_control == `EA_MOD_PREDEC)                    ea_mod <= 3'b100;
+    else if(ea_mod_control == `EA_MOD_IR_8_6)                   ea_mod <= ir[8:6];
+    else if(ea_mod_control == `EA_MOD_PREDEC)                   ea_mod <= 3'b100;
     else if(ea_mod_control == `EA_MOD_3b111)                    ea_mod <= 3'b111;
     else if(ea_mod_control == `EA_MOD_DN_PREDEC)                ea_mod <= (ir[3] == 1'b0) ? /* Dn */ 3'b000 : /* -(An) */ 3'b100;
     else if(ea_mod_control == `EA_MOD_DN_AN_EXG)                ea_mod <= (ir[7:3] == 5'b01000 || ir[7:3] == 5'b10001) ? /* Dn */ 3'b000 : /* An */ 3'b001;
-    else if(ea_mod_control == `EA_MOD_POSTINC)                    ea_mod <= 3'b011;
-    else if(ea_mod_control == `EA_MOD_AN)                        ea_mod <= 3'b001;
-    else if(ea_mod_control == `EA_MOD_DN)                        ea_mod <= 3'b000;
-    else if(ea_mod_control == `EA_MOD_INDIRECTOFFSET)            ea_mod <= 3'b101;
+    else if(ea_mod_control == `EA_MOD_POSTINC)                  ea_mod <= 3'b011;
+    else if(ea_mod_control == `EA_MOD_AN)                       ea_mod <= 3'b001;
+    else if(ea_mod_control == `EA_MOD_DN)                       ea_mod <= 3'b000;
+    else if(ea_mod_control == `EA_MOD_INDIRECTOFFSET)           ea_mod <= 3'b101;
 end
 
-always @(posedge clock) begin
-    if(reset)                                                    ea_type <= `EA_TYPE_IDLE;
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         ea_type <= `EA_TYPE_IDLE;
     else if(ea_type_control == `EA_TYPE_ALL)                    ea_type <= `EA_TYPE_ALL;
     else if(ea_type_control == `EA_TYPE_CONTROL_POSTINC)        ea_type <= `EA_TYPE_CONTROL_POSTINC;
     else if(ea_type_control == `EA_TYPE_CONTROLALTER_PREDEC)    ea_type <= `EA_TYPE_CONTROLALTER_PREDEC;
     else if(ea_type_control == `EA_TYPE_CONTROL)                ea_type <= `EA_TYPE_CONTROL;
-    else if(ea_type_control == `EA_TYPE_DATAALTER)                ea_type <= `EA_TYPE_DATAALTER;
-    else if(ea_type_control == `EA_TYPE_DN_AN)                    ea_type <= `EA_TYPE_DN_AN;
+    else if(ea_type_control == `EA_TYPE_DATAALTER)              ea_type <= `EA_TYPE_DATAALTER;
+    else if(ea_type_control == `EA_TYPE_DN_AN)                  ea_type <= `EA_TYPE_DN_AN;
     else if(ea_type_control == `EA_TYPE_MEMORYALTER)            ea_type <= `EA_TYPE_MEMORYALTER;
-    else if(ea_type_control == `EA_TYPE_DATA)                    ea_type <= `EA_TYPE_DATA;
+    else if(ea_type_control == `EA_TYPE_DATA)                   ea_type <= `EA_TYPE_DATA;
 end
 
-always @(posedge clock) begin
-    if(reset)                                                    operand1 <= 32'hFFFFFFFF;
-    else if(operand1_control == `OP1_FROM_OP2)                    operand1 <= operand2;
-    else if(operand1_control == `OP1_FROM_ADDRESS)                operand1 <= address;
-    else if(operand1_control == `OP1_FROM_DATA)                    operand1 <=
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         operand1 <= 32'hFFFFFFFF;
+    else if(operand1_control == `OP1_FROM_OP2)                  operand1 <= operand2;
+    else if(operand1_control == `OP1_FROM_ADDRESS)              operand1 <= address;
+    else if(operand1_control == `OP1_FROM_DATA)                 operand1 <=
                                                                     (size == 2'b00) ? { {24{data_read[7]}}, data_read[7:0] } :
                                                                     (size == 2'b01) ? { {16{data_read[15]}}, data_read[15:0] } :
                                                                     data_read[31:0];
@@ -1411,139 +1451,113 @@ always @(posedge clock) begin
                                                                     (size == 2'b00) ? { {24{prefetch_ir[71]}}, prefetch_ir[71:64] } :
                                                                     (size == 2'b01) ? { {16{prefetch_ir[79]}}, prefetch_ir[79:64] } :
                                                                     prefetch_ir[79:48];
-    else if(operand1_control == `OP1_FROM_RESULT)                operand1 <= result;
-    else if(operand1_control == `OP1_MOVEQ)                        operand1 <= { {24{ir[7]}}, ir[7:0] };
-    else if(operand1_control == `OP1_FROM_PC)                    operand1 <= pc_valid;
+    else if(operand1_control == `OP1_FROM_RESULT)               operand1 <= result;
+    else if(operand1_control == `OP1_MOVEQ)                     operand1 <= { {24{ir[7]}}, ir[7:0] };
+    else if(operand1_control == `OP1_FROM_PC)                   operand1 <= pc_valid;
     else if(operand1_control == `OP1_LOAD_ZEROS)                operand1 <= 32'b0;
-    else if(operand1_control == `OP1_LOAD_ONES)                    operand1 <= 32'hFFFFFFFF;
-    else if(operand1_control == `OP1_FROM_SR)                    operand1 <= { 16'b0, sr[15], 1'b0, sr[13], 2'b0, sr[10:8], 3'b0, sr[4:0] };
-    else if(operand1_control == `OP1_FROM_USP)                    operand1 <= usp;
-    else if(operand1_control == `OP1_FROM_AN)                    operand1 <= 
+    else if(operand1_control == `OP1_LOAD_ONES)                 operand1 <= 32'hFFFFFFFF;
+    else if(operand1_control == `OP1_FROM_SR)                   operand1 <= { 16'b0, sr[15], 1'b0, sr[13], 2'b0, sr[10:8], 3'b0, sr[4:0] };
+    else if(operand1_control == `OP1_FROM_USP)                  operand1 <= usp;
+    else if(operand1_control == `OP1_FROM_AN)                   operand1 <= 
                                                                     (size == 2'b01) ? { {16{An_output[15]}}, An_output[15:0] } :
                                                                     An_output[31:0];
-    else if(operand1_control == `OP1_FROM_DN)                    operand1 <=
+    else if(operand1_control == `OP1_FROM_DN)                   operand1 <=
                                                                     (size == 2'b00) ? { {24{Dn_output[7]}}, Dn_output[7:0] } :
                                                                     (size == 2'b01) ? { {16{Dn_output[15]}}, Dn_output[15:0] } :
                                                                     Dn_output[31:0];
-    else if(operand1_control == `OP1_FROM_IR)                    operand1 <= { 16'b0, ir[15:0] };
+    else if(operand1_control == `OP1_FROM_IR)                   operand1 <= { 16'b0, ir[15:0] };
     else if(operand1_control == `OP1_FROM_FAULT_ADDRESS)        operand1 <= fault_address_state;
 end
 
-always @(posedge clock) begin
-    if(reset)                                                    operand2 <= 32'hFFFFFFFF;
-    else if(operand2_control == `OP2_FROM_OP1)                    operand2 <= operand1;
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         operand2 <= 32'hFFFFFFFF;
+    else if(operand2_control == `OP2_FROM_OP1)                  operand2 <= operand1;
     else if(operand2_control == `OP2_LOAD_1)                    operand2 <= 32'd1;
     else if(operand2_control == `OP2_LOAD_COUNT)                operand2 <=
                                                                     (ir[5] == 1'b0) ? ( (ir[11:9] == 3'b000) ? 32'b1000 : { 29'b0, ir[11:9] } ) :
                                                                     { 26'b0, operand2[5:0] };
-    else if(operand2_control == `OP2_ADDQ_SUBQ)                    operand2 <= (ir[11:9] == 3'b000) ? 32'b1000 : { 29'b0, ir[11:9] };
-    else if(operand2_control == `OP2_MOVE_OFFSET)                operand2 <= (ir[7:0] == 8'b0) ? operand2[31:0] : { {24{ir[7]}}, ir[7:0] };
-    else if(operand2_control == `OP2_MOVE_ADDRESS_BUS_INFO)        operand2 <= { 16'b0, 11'b0, rw_state, instruction_flag, fc_state};
-    else if(operand2_control == `OP2_DECR_BY_1)                    operand2 <= operand2 - 32'b1;
+    else if(operand2_control == `OP2_ADDQ_SUBQ)                 operand2 <= (ir[11:9] == 3'b000) ? 32'b1000 : { 29'b0, ir[11:9] };
+    else if(operand2_control == `OP2_MOVE_OFFSET)               operand2 <= (ir[7:0] == 8'b0) ? operand2[31:0] : { {24{ir[7]}}, ir[7:0] };
+    else if(operand2_control == `OP2_MOVE_ADDRESS_BUS_INFO)     operand2 <= { 16'b0, 11'b0, rw_state, instruction_flag, fc_state};
+    else if(operand2_control == `OP2_DECR_BY_1)                 operand2 <= operand2 - 32'b1;
 end
 
-always @(posedge clock) begin
-    if(reset)                                                    address <= 32'b0;
-    else if(address_control == `ADDRESS_INCR_BY_SIZE)            address <=
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         address <= 32'b0;
+    else if(address_control == `ADDRESS_INCR_BY_SIZE)           address <=
                                                                     (size == 2'b00 && ea_reg != 3'b111) ? address + 32'd1 :
                                                                     (size == 2'b01 || (size == 2'b00 && ea_reg == 3'b111)) ? address + 32'd2 :
                                                                     (size == 2'b10) ? address + 32'd4 :
                                                                     address;
-    else if(address_control == `ADDRESS_DECR_BY_SIZE)            address <=
+    else if(address_control == `ADDRESS_DECR_BY_SIZE)           address <=
                                                                     (size == 2'b00 && ea_reg != 3'b111) ? address - 32'd1 :
                                                                     (size == 2'b01 || (size == 2'b00 && ea_reg == 3'b111)) ? address - 32'd2 :
                                                                     (size == 2'b10) ? address - 32'd4 :
                                                                     address;
-    else if(address_control == `ADDRESS_INCR_BY_2)                address <= address + 32'd2;
-    else if(address_control == `ADDRESS_FROM_AN_OUTPUT)            address <= An_output;
-    else if(address_control == `ADDRESS_FROM_BASE_INDEX_OFFSET)    address <= address + index + offset;
+    else if(address_control == `ADDRESS_INCR_BY_2)              address <= address + 32'd2;
+    else if(address_control == `ADDRESS_FROM_AN_OUTPUT)         address <= An_output;
+    else if(address_control == `ADDRESS_FROM_BASE_INDEX_OFFSET) address <= address + index + offset;
     else if(address_control == `ADDRESS_FROM_IMM_16)            address <= { {16{prefetch_ir[79]}}, prefetch_ir[79:64] };
     else if(address_control == `ADDRESS_FROM_IMM_32)            address <= prefetch_ir[79:48];
-    else if(address_control == `ADDRESS_FROM_PC_INDEX_OFFSET)    address <= pc_valid + index + offset;
-    else if(address_control == `ADDRESS_FROM_TRAP)                address <= {22'b0, trap[7:0], 2'b0};
+    else if(address_control == `ADDRESS_FROM_PC_INDEX_OFFSET)   address <= pc_valid + index + offset;
+    else if(address_control == `ADDRESS_FROM_TRAP)              address <= {22'b0, trap[7:0], 2'b0};
 end
 
-always @(posedge clock) begin
-    if(reset)                                                    address_type <= 1'b0;
-    else if(address_control == `ADDRESS_FROM_PC_INDEX_OFFSET)    address_type <= 1'b1;
-    else if(address_control != `ADDRESS_IDLE)                    address_type <= 1'b0;
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         address_type <= 1'b0;
+    else if(address_control == `ADDRESS_FROM_PC_INDEX_OFFSET)   address_type <= 1'b1;
+    else if(address_control != `ADDRESS_IDLE)                   address_type <= 1'b0;
 end
 
-always @(posedge clock) begin
-    if(reset)                                                        movem_modreg <= 6'b0;
-    else if(movem_modreg_control == `MOVEM_MODREG_LOAD_0)             movem_modreg <= 6'b0;
-    else if(movem_modreg_control == `MOVEM_MODREG_LOAD_6b001111)    movem_modreg <= 6'b001111;
-    else if(movem_modreg_control == `MOVEM_MODREG_INCR_BY_1)         movem_modreg <= movem_modreg + 6'd1;
-    else if(movem_modreg_control == `MOVEM_MODREG_DECR_BY_1)         movem_modreg <= movem_modreg - 6'd1;
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         movem_modreg <= 6'b0;
+    else if(movem_modreg_control == `MOVEM_MODREG_LOAD_0)       movem_modreg <= 6'b0;
+    else if(movem_modreg_control == `MOVEM_MODREG_LOAD_6b001111)movem_modreg <= 6'b001111;
+    else if(movem_modreg_control == `MOVEM_MODREG_INCR_BY_1)    movem_modreg <= movem_modreg + 6'd1;
+    else if(movem_modreg_control == `MOVEM_MODREG_DECR_BY_1)    movem_modreg <= movem_modreg - 6'd1;
 end
 
-always @(posedge clock) begin
-    if(reset)                                                    movem_loop <= 5'b0;
-    else if(movem_loop_control == `MOVEM_LOOP_LOAD_0)             movem_loop <= 5'b0;
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         movem_loop <= 5'b0;
+    else if(movem_loop_control == `MOVEM_LOOP_LOAD_0)           movem_loop <= 5'b0;
     else if(movem_loop_control == `MOVEM_LOOP_INCR_BY_1)        movem_loop <= movem_loop + 5'd1;
 end
 
-always @(posedge clock) begin
-    if(reset)                                                    movem_reg <= 16'b0;
-    else if(movem_reg_control == `MOVEM_REG_FROM_OP1)             movem_reg <= operand1[15:0];
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         movem_reg <= 16'b0;
+    else if(movem_reg_control == `MOVEM_REG_FROM_OP1)           movem_reg <= operand1[15:0];
     else if(movem_reg_control == `MOVEM_REG_SHIFT_RIGHT)        movem_reg <= { 1'b0, movem_reg[15:1] };
 end
 
-always @(posedge clock) begin
-    if(reset)                                                    ir <= 16'b0;
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         ir <= 16'b0;
     else if(ir_control == `IR_LOAD_WHEN_PREFETCH_VALID && prefetch_ir_valid == 1'b1 && stop_flag == 1'b0)
                                                                 ir <= prefetch_ir[79:64];
 end
 
-reg [31:0] pc_valid;
-
-// pc_change connected
-always @(posedge clock) begin
-    if(reset)                                                    pc = 32'd0;
-    else if(pc_control == `PC_FROM_RESULT)                         pc = result;
-    else if(pc_control == `PC_INCR_BY_2)                         pc = pc + 32'd2;
-    else if(pc_control == `PC_INCR_BY_4)                         pc = pc + 32'd4;
-    else if(pc_control == `PC_INCR_BY_SIZE)                     pc = (size == 2'b00 || size == 2'b01) ? pc + 32'd2 : pc + 32'd4;
-    else if(pc_control == `PC_FROM_PREFETCH_IR)                 pc = prefetch_ir[47:16];
-    else if(pc_control == `PC_INCR_BY_2_IN_MAIN_LOOP && prefetch_ir_valid == 1'b1 && decoder_trap == 8'd0 && stop_flag == 1'b0)
-                                                                pc = pc + 32'd2;
-    if(reset)                    pc_valid <= 32'd0;
-    else if(pc[0] == 1'b0)        pc_valid <= pc;
-end
-
-assign pc_change =
-    (    pc_control == `PC_INCR_BY_2 || (pc_control == `PC_INCR_BY_SIZE && (size == 2'b00 || size == 2'b01)) ||
-        (pc_control == `PC_INCR_BY_2_IN_MAIN_LOOP && prefetch_ir_valid == 1'b1 && decoder_trap == 8'd0 && stop_flag == 1'b0)
-    ) ? 2'b01 :
-    (    pc_control == `PC_INCR_BY_4 || (pc_control == `PC_INCR_BY_SIZE && size == 2'b10)
-    ) ? 2'b10 :
-    (    pc_control == `PC_FROM_RESULT || pc_control == `PC_FROM_PREFETCH_IR
-    ) ? 2'b11 :
-    2'b00;
-
-always @(posedge clock) begin
-    if(reset)                                                    trap <= 8'd0;
-    else if(trap_control == `TRAP_ILLEGAL_INSTR)                 trap <= 8'd4;
-    else if(trap_control == `TRAP_DIV_BY_ZERO)                     trap <= 8'd5;
-    else if(trap_control == `TRAP_CHK)                             trap <= 8'd6;
-    else if(trap_control == `TRAP_TRAPV)                         trap <= 8'd7;
-    else if(trap_control == `TRAP_PRIVIL_VIOLAT)                 trap <= 8'd8;
-    else if(trap_control == `TRAP_TRACE)                         trap <= 8'd9;
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         trap <= 8'd0;
+    else if(trap_control == `TRAP_ILLEGAL_INSTR)                trap <= 8'd4;
+    else if(trap_control == `TRAP_DIV_BY_ZERO)                  trap <= 8'd5;
+    else if(trap_control == `TRAP_CHK)                          trap <= 8'd6;
+    else if(trap_control == `TRAP_TRAPV)                        trap <= 8'd7;
+    else if(trap_control == `TRAP_PRIVIL_VIOLAT)                trap <= 8'd8;
+    else if(trap_control == `TRAP_TRACE)                        trap <= 8'd9;
     else if(trap_control == `TRAP_TRAP)                         trap <= { 4'b0010, ir[3:0] };
     else if(trap_control == `TRAP_FROM_DECODER)                 trap <= decoder_trap;
-    else if(trap_control == `TRAP_FROM_INTERRUPT)                 trap <= interrupt_trap;
+    else if(trap_control == `TRAP_FROM_INTERRUPT)               trap <= interrupt_trap;
 end
 
-always @(posedge clock) begin
-    if(reset)                                                    offset <= 32'd0;
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         offset <= 32'd0;
     else if(offset_control == `OFFSET_IMM_8)                    offset <= { {24{prefetch_ir[71]}}, prefetch_ir[71:64] };
-    else if(offset_control == `OFFSET_IMM_16)                    offset <= { {16{prefetch_ir[79]}}, prefetch_ir[79:64] };
+    else if(offset_control == `OFFSET_IMM_16)                   offset <= { {16{prefetch_ir[79]}}, prefetch_ir[79:64] };
 end
 
-always @(posedge clock) begin
-    if(reset)                                                    index <= 32'd0;
-    else if(index_control == `INDEX_0)                            index <= 32'd0;
-    else if(index_control == `INDEX_LOAD_EXTENDED)                index <=
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         index <= 32'd0;
+    else if(index_control == `INDEX_0)                          index <= 32'd0;
+    else if(index_control == `INDEX_LOAD_EXTENDED)              index <=
                                                                     (prefetch_ir[79] == 1'b0) ?
                                                                     (     (prefetch_ir[75] == 1'b0)  ?
                                                                             { {16{Dn_output[15]}}, Dn_output[15:0] } : Dn_output[31:0]
@@ -1553,81 +1567,81 @@ always @(posedge clock) begin
                                                                     );
 end
 
-always @(posedge clock) begin
-    if(reset)                                                    stop_flag <= 1'b0;
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         stop_flag <= 1'b0;
     else if(stop_flag_control == `STOP_FLAG_SET)                stop_flag <= 1'b1;
-    else if(stop_flag_control == `STOP_FLAG_CLEAR)                stop_flag <= 1'b0;
+    else if(stop_flag_control == `STOP_FLAG_CLEAR)              stop_flag <= 1'b0;
 end
 
-always @(posedge clock) begin
-    if(reset)                                                    trace_flag <= 1'b0;
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         trace_flag <= 1'b0;
     else if(trace_flag_control == `TRACE_FLAG_COPY_WHEN_NO_STOP && prefetch_ir_valid == 1'b1 && decoder_trap == 8'd0 && stop_flag == 1'b0)
                                                                 trace_flag <= sr[15];
 end
 
-always @(posedge clock) begin
-    if(reset)                                                    group_0_flag <= 1'b0;
-    else if(group_0_flag_control == `GROUP_0_FLAG_SET)            group_0_flag <= 1'b1;
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         group_0_flag <= 1'b0;
+    else if(group_0_flag_control == `GROUP_0_FLAG_SET)          group_0_flag <= 1'b1;
     else if(group_0_flag_control == `GROUP_0_FLAG_CLEAR_WHEN_VALID_PREFETCH && prefetch_ir_valid == 1'b1 && stop_flag == 1'b0)
                                                                 group_0_flag <= 1'b0;
 end
 
-always @(posedge clock) begin
-    if(reset)                                                    instruction_flag <= 1'b0;
-    else if(instruction_flag_control == `INSTRUCTION_FLAG_SET)    instruction_flag <= 1'b1;
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         instruction_flag <= 1'b0;
+    else if(instruction_flag_control == `INSTRUCTION_FLAG_SET)  instruction_flag <= 1'b1;
     else if(instruction_flag_control == `INSTRUCTION_FLAG_CLEAR_IN_MAIN_LOOP && prefetch_ir_valid == 1'b1 && decoder_trap == 8'd0 && stop_flag == 1'b0)
                                                                 instruction_flag <= 1'b0;
 end
 
-always @(posedge clock) begin
-    if(reset)                                                                        read_modify_write_flag <= 1'b0;
-    else if(read_modify_write_flag_control == `READ_MODIFY_WRITE_FLAG_SET)            read_modify_write_flag <= 1'b1;
-    else if(read_modify_write_flag_control == `READ_MODIFY_WRITE_FLAG_CLEAR)        read_modify_write_flag <= 1'b0;
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                                         read_modify_write_flag <= 1'b0;
+    else if(read_modify_write_flag_control == `READ_MODIFY_WRITE_FLAG_SET)      read_modify_write_flag <= 1'b1;
+    else if(read_modify_write_flag_control == `READ_MODIFY_WRITE_FLAG_CLEAR)    read_modify_write_flag <= 1'b0;
 end
 
-always @(posedge clock) begin
-    if(reset)                                                    do_reset_flag <= 1'b0;
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         do_reset_flag <= 1'b0;
     else if(do_reset_flag_control == `DO_RESET_FLAG_SET)        do_reset_flag <= 1'b1;
-    else if(do_reset_flag_control == `DO_RESET_FLAG_CLEAR)        do_reset_flag <= 1'b0;
+    else if(do_reset_flag_control == `DO_RESET_FLAG_CLEAR)      do_reset_flag <= 1'b0;
 end
 
-always @(posedge clock) begin
-    if(reset)                                                                    do_interrupt_flag <= 1'b0;
-    else if(do_interrupt_flag_control == `DO_INTERRUPT_FLAG_SET_IF_ACTIVE)        do_interrupt_flag <= (interrupt_mask != 3'b000) ? 1'b1 : 1'b0;
-    else if(do_interrupt_flag_control == `DO_INTERRUPT_FLAG_CLEAR)                do_interrupt_flag <= 1'b0;
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                                         do_interrupt_flag <= 1'b0;
+    else if(do_interrupt_flag_control == `DO_INTERRUPT_FLAG_SET_IF_ACTIVE)      do_interrupt_flag <= (interrupt_mask != 3'b000) ? 1'b1 : 1'b0;
+    else if(do_interrupt_flag_control == `DO_INTERRUPT_FLAG_CLEAR)              do_interrupt_flag <= 1'b0;
 end
 
-always @(posedge clock) begin
-    if(reset)                                                    do_read_flag <= 1'b0;
-    else if(do_read_flag_control == `DO_READ_FLAG_SET)            do_read_flag <= 1'b1;
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         do_read_flag <= 1'b0;
+    else if(do_read_flag_control == `DO_READ_FLAG_SET)          do_read_flag <= 1'b1;
     else if(do_read_flag_control == `DO_READ_FLAG_CLEAR)        do_read_flag <= 1'b0;
 end
 
-always @(posedge clock) begin
-    if(reset)                                                    do_write_flag <= 1'b0;
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         do_write_flag <= 1'b0;
     else if(do_write_flag_control == `DO_WRITE_FLAG_SET)        do_write_flag <= 1'b1;
-    else if(do_write_flag_control == `DO_WRITE_FLAG_CLEAR)        do_write_flag <= 1'b0;
+    else if(do_write_flag_control == `DO_WRITE_FLAG_CLEAR)      do_write_flag <= 1'b0;
 end
 
-always @(posedge clock) begin
-    if(reset)                                                    do_blocked_flag <= 1'b0;
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         do_blocked_flag <= 1'b0;
     else if(do_blocked_flag_control == `DO_BLOCKED_FLAG_SET)    do_blocked_flag <= 1'b1;
 end
 
-always @(posedge clock) begin
-    if(reset)                                                    data_write <= 32'd0;
-    else if(data_write_control == `DATA_WRITE_FROM_RESULT)        data_write <= result;
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         data_write <= 32'd0;
+    else if(data_write_control == `DATA_WRITE_FROM_RESULT)      data_write <= result;
 end
 
 assign An_address =
     (An_address_control == `AN_ADDRESS_FROM_EXTENDED) ? { sr[13], prefetch_ir[78:76] } :
-    (An_address_control == `AN_ADDRESS_USP) ? 4'b0111 :
-    (An_address_control == `AN_ADDRESS_SSP) ? 4'b1111 :
+    (An_address_control == `AN_ADDRESS_USP) ?           4'b0111 :
+    (An_address_control == `AN_ADDRESS_SSP) ?           4'b1111 :
     { sr[13], ea_reg };
 
 assign An_input =
-    (An_input_control == `AN_INPUT_FROM_ADDRESS) ? address :
-    (An_input_control == `AN_INPUT_FROM_PREFETCH_IR) ? prefetch_ir[79:48] :
+    (An_input_control == `AN_INPUT_FROM_ADDRESS) ?      address :
+    (An_input_control == `AN_INPUT_FROM_PREFETCH_IR) ?  prefetch_ir[79:48] :
     result;
 
 assign Dn_address = (Dn_address_control == `DN_ADDRESS_FROM_EXTENDED) ? prefetch_ir[78:76] : ea_reg;
@@ -1646,7 +1660,7 @@ endmodule
  */
 module memory_registers(
     input clock,
-    input reset,
+    input reset_n,
 
     // 0000,0001,0010,0011,0100,0101,0110: A0-A6, 0111: USP, 1111: SSP
     input [3:0] An_address,
@@ -1685,9 +1699,15 @@ register_ram an_ram(
     .data_output(An_ram_output)
 );
 
-always @(posedge clock) begin
-    if(reset == 1'b1)                                    usp <= 32'd0;
-    else if(An_address == 4'b0111 && An_write_enable)    usp <= An_input;
+wire [3:0] dn_byteena;
+assign dn_byteena = (Dn_size == 2'b00) ? 4'b0001 :
+                    (Dn_size == 2'b01) ? 4'b0011 :
+                    (Dn_size == 2'b10) ? 4'b1111 :
+                    4'b0000;
+
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                 usp <= 32'd0;
+    else if(An_address == 4'b0111 && An_write_enable)   usp <= An_input;
 end
 
 register_ram dn_ram(
@@ -1699,12 +1719,6 @@ register_ram dn_ram(
     .data_input(Dn_input),
     .data_output(Dn_output)
 );
-
-wire [3:0] dn_byteena;
-assign dn_byteena = (Dn_size == 2'b00) ? 4'b0001 :
-                    (Dn_size == 2'b01) ? 4'b0011 :
-                    (Dn_size == 2'b10) ? 4'b1111 :
-                    4'b0000;
 
 microcode_rom micro_rom(
     .clock(clock),
@@ -1731,7 +1745,7 @@ endmodule
  */
 module decoder(
     input clock,
-    input reset,
+    input reset_n,
 
     input supervisor,
     input [15:0] ir,
@@ -1751,17 +1765,17 @@ module decoder(
 );
 
 parameter [7:0]
-    NO_TRAP                                = 8'd0,
+    NO_TRAP                             = 8'd0,
     ILLEGAL_INSTRUCTION_TRAP            = 8'd4,
     PRIVILEGE_VIOLATION_TRAP            = 8'd8,
-    ILLEGAL_1010_INSTRUCTION_TRAP        = 8'd10,
-    ILLEGAL_1111_INSTRUCTION_TRAP        = 8'd11;
+    ILLEGAL_1010_INSTRUCTION_TRAP       = 8'd10,
+    ILLEGAL_1111_INSTRUCTION_TRAP       = 8'd11;
 
 parameter [8:0]
-    UNUSED_MICROPC                        = 9'd0;
+    UNUSED_MICROPC                      = 9'd0;
 
 assign { decoder_trap, decoder_micropc } =
-    (reset == 1'b1) ? { NO_TRAP, UNUSED_MICROPC } :
+    (reset_n == 1'b0) ? { NO_TRAP, UNUSED_MICROPC } :
 
     // Privilege violation and illegal instruction
 
@@ -2112,22 +2126,22 @@ assign V = ccr[1];
 assign Z = ccr[2];
 assign N = ccr[3];
 
-assign condition =     (cond == 4'b0000) ? 1'b1 :                            // true
-                    (cond == 4'b0001) ? 1'b0 :                            // false
+assign condition =  (cond == 4'b0000) ? 1'b1 :                              // true
+                    (cond == 4'b0001) ? 1'b0 :                              // false
                     (cond == 4'b0010) ? ~C & ~Z    :                        // high
-                    (cond == 4'b0011) ? C | Z :                            // low or same
-                    (cond == 4'b0100) ? ~C :                            // carry clear
-                    (cond == 4'b0101) ? C :                                // carry set
-                    (cond == 4'b0110) ? ~Z :                            // not equal
-                    (cond == 4'b0111) ? Z :                                // equal
-                    (cond == 4'b1000) ? ~V :                            // overflow clear
-                    (cond == 4'b1001) ? V :                                // overflow set
-                    (cond == 4'b1010) ? ~N :                            // plus
-                    (cond == 4'b1011) ? N :                                // minus
-                    (cond == 4'b1100) ? (N & V) | (~N & ~V) :            // greater or equal
+                    (cond == 4'b0011) ? C | Z :                             // low or same
+                    (cond == 4'b0100) ? ~C :                                // carry clear
+                    (cond == 4'b0101) ? C :                                 // carry set
+                    (cond == 4'b0110) ? ~Z :                                // not equal
+                    (cond == 4'b0111) ? Z :                                 // equal
+                    (cond == 4'b1000) ? ~V :                                // overflow clear
+                    (cond == 4'b1001) ? V :                                 // overflow set
+                    (cond == 4'b1010) ? ~N :                                // plus
+                    (cond == 4'b1011) ? N :                                 // minus
+                    (cond == 4'b1100) ? (N & V) | (~N & ~V) :               // greater or equal
                     (cond == 4'b1101) ? (N & ~V) | (~N & V)    :            // less than
-                    (cond == 4'b1110) ? (N & V & ~Z) | (~N & ~V & ~Z) :    // greater than
-                    (cond == 4'b1111) ? (Z) | (N & ~V) | (~N & V) :        // less or equal
+                    (cond == 4'b1110) ? (N & V & ~Z) | (~N & ~V & ~Z) :     // greater than
+                    (cond == 4'b1111) ? (Z) | (N & ~V) | (~N & V) :         // less or equal
                     1'b0;
 endmodule
 
@@ -2146,7 +2160,7 @@ endmodule
  */
 module alu(
     input clock,
-    input reset,
+    input reset_n,
 
     // only zero bit
     input [31:0] address,
@@ -2175,7 +2189,6 @@ wire [31:0] muls_result;
 
 alu_mult_div alu_mult_div_m (
     .clock(clock),
-    .reset(reset),
 
     .operand1(operand1),
     .operand2(operand2),
@@ -2201,8 +2214,8 @@ alu_mult_div alu_mult_div_m (
 reg [2:0] interrupt_mask_copy;
 reg was_interrupt;
 
-always @(posedge clock) begin
-    if(reset == 1'b1) begin
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0) begin
         sr <= { 1'b0, 1'b0, 1'b1, 2'b0, 3'b111, 8'b0 };
         result <= 32'd0;
         special <= 2'b0;
@@ -2227,32 +2240,32 @@ always @(posedge clock) begin
             end
 
             `ALU_MOVEP_M2R_1: begin
-                if(ir[6] == 1'b1)     result[31:24] <= operand1[7:0];
+                if(ir[6] == 1'b1)   result[31:24] <= operand1[7:0];
                 else                result[15:8] <= operand1[7:0];
                 //CCR: no change
             end
             `ALU_MOVEP_M2R_2: begin
-                if(ir[6] == 1'b1)     result[23:16] <= operand1[7:0];
+                if(ir[6] == 1'b1)   result[23:16] <= operand1[7:0];
                 else                result[7:0] <= operand1[7:0];
                 //CCR: no change
             end
             `ALU_MOVEP_M2R_3: begin
-                if(ir[6] == 1'b1)     result[15:8] <= operand1[7:0];
+                if(ir[6] == 1'b1)   result[15:8] <= operand1[7:0];
                 //CCR: no change
             end
             `ALU_MOVEP_M2R_4: begin
-                if(ir[6] == 1'b1)     result[7:0] <= operand1[7:0];
+                if(ir[6] == 1'b1)   result[7:0] <= operand1[7:0];
                 //CCR: no change
             end
             
 
             `ALU_MOVEP_R2M_1: begin
-                if(ir[6] == 1'b1)     result[7:0] <= operand1[31:24];
+                if(ir[6] == 1'b1)   result[7:0] <= operand1[31:24];
                 else                result[7:0] <= operand1[15:8];
                 // CCR: no change
             end
             `ALU_MOVEP_R2M_2: begin
-                if(ir[6] == 1'b1)     result[7:0] <= operand1[23:16];
+                if(ir[6] == 1'b1)   result[7:0] <= operand1[23:16];
                 else                result[7:0] <= operand1[7:0];
                 // CCR: no change
             end
@@ -2463,32 +2476,32 @@ always @(posedge clock) begin
                     result[31:0] = {operand1[30:0], 1'b0};
 
                     sr[1] <= (sr[1] == 1'b0)? (`Rm != `Dm) : 1'b1; // V
-                    sr[0] <= `Dm; // C
-                    sr[4] <= `Dm; // X
+                    sr[0] <= `Dm;           // C
+                    sr[4] <= `Dm;           // X
                 end
                 // LSL
                 else if( ((ir[7:6] == 2'b11 && ir[10:9] == 2'b01) || (ir[7:6] != 2'b11 && ir[4:3] == 2'b01)) && ir[8] == 1'b1) begin
                     result[31:0] = {operand1[30:0], 1'b0};
 
-                    sr[1] <= 1'b0; // V
-                    sr[0] <= `Dm; // C
-                    sr[4] <= `Dm; // X
+                    sr[1] <= 1'b0;          // V
+                    sr[0] <= `Dm;           // C
+                    sr[4] <= `Dm;           // X
                 end
                 // ROL
                 else if( ((ir[7:6] == 2'b11 && ir[10:9] == 2'b11) || (ir[7:6] != 2'b11 && ir[4:3] == 2'b11)) && ir[8] == 1'b1) begin
                     result[31:0] = {operand1[30:0], `Dm};
 
-                    sr[1] <= 1'b0; // V
-                    sr[0] <= `Dm; // C
-                    // X not affected
+                    sr[1] <= 1'b0;          // V
+                    sr[0] <= `Dm;           // C
+                                            // X not affected
                 end
                 // ROXL
                 else if( ((ir[7:6] == 2'b11 && ir[10:9] == 2'b10) || (ir[7:6] != 2'b11 && ir[4:3] == 2'b10)) && ir[8] == 1'b1) begin
                     result[31:0] = {operand1[30:0], sr[4]};
 
-                    sr[1] <= 1'b0; // V
-                    sr[0] <= `Dm; // C
-                    sr[4] <= `Dm; // X
+                    sr[1] <= 1'b0;          // V
+                    sr[0] <= `Dm;           // C
+                    sr[4] <= `Dm;           // X
                 end
                 // ASR
                 else if( ((ir[7:6] == 2'b11 && ir[10:9] == 2'b00) || (ir[7:6] != 2'b11 && ir[4:3] == 2'b00)) && ir[8] == 1'b0) begin
@@ -2496,9 +2509,9 @@ always @(posedge clock) begin
                     else if(size == 2'b01)    result[15:0] = { operand1[15], operand1[15:1] };
                     else if(size == 2'b10)    result[31:0] = { operand1[31], operand1[31:1] };
 
-                    sr[1] <= 1'b0; // V
-                    sr[0] <= operand1[0]; // C
-                    sr[4] <= operand1[0]; // X
+                    sr[1] <= 1'b0;          // V
+                    sr[0] <= operand1[0];   // C
+                    sr[4] <= operand1[0];   // X
                 end
                 // LSR
                 else if( ((ir[7:6] == 2'b11 && ir[10:9] == 2'b01) || (ir[7:6] != 2'b11 && ir[4:3] == 2'b01)) && ir[8] == 1'b0) begin
@@ -2506,9 +2519,9 @@ always @(posedge clock) begin
                     else if(size == 2'b01)    result[15:0] = { 1'b0, operand1[15:1] };
                     else if(size == 2'b10)    result[31:0] = { 1'b0, operand1[31:1] };
 
-                    sr[1] <= 1'b0; // V
-                    sr[0] <= operand1[0]; // C
-                    sr[4] <= operand1[0]; // X
+                    sr[1] <= 1'b0;          // V
+                    sr[0] <= operand1[0];   // C
+                    sr[4] <= operand1[0];   // X
                 end
                 // ROR
                 else if( ((ir[7:6] == 2'b11 && ir[10:9] == 2'b11) || (ir[7:6] != 2'b11 && ir[4:3] == 2'b11)) && ir[8] == 1'b0) begin
@@ -2516,8 +2529,8 @@ always @(posedge clock) begin
                     else if(size == 2'b01)    result[15:0] = { operand1[0], operand1[15:1] };
                     else if(size == 2'b10)    result[31:0] = { operand1[0], operand1[31:1] };
 
-                    sr[1] <= 1'b0; // V
-                    sr[0] <= operand1[0]; // C
+                    sr[1] <= 1'b0;          // V
+                    sr[0] <= operand1[0];   // C
                     // X not affected
                 end
                 // ROXR
@@ -2526,9 +2539,9 @@ always @(posedge clock) begin
                     else if(size == 2'b01)    result[15:0] = {sr[4], operand1[15:1]};
                     else if(size == 2'b10)    result[31:0] = {sr[4], operand1[31:1]};
 
-                    sr[1] <= 1'b0; // V
-                    sr[0] <= operand1[0]; // C
-                    sr[4] <= operand1[0]; // X
+                    sr[1] <= 1'b0;          // V
+                    sr[0] <= operand1[0];   // C
+                    sr[4] <= operand1[0];   // X
                 end
 
                 // N set
@@ -2858,7 +2871,7 @@ endmodule
  */
 module microcode_branch(
     input clock,
-    input reset,
+    input reset_n,
 
     input [4:0] movem_loop,
     input [15:0] movem_reg,
@@ -2891,40 +2904,45 @@ module microcode_branch(
     output [8:0] micro_pc
 );
 
+reg [8:0] micro_pc_0 = 9'd0;
+reg [8:0] micro_pc_1;
+reg [8:0] micro_pc_2;
+reg [8:0] micro_pc_3;
+
 assign micro_pc =
-    (reset == 1'b1) ? 9'd0 :
+    (reset_n == 1'b0) ? 9'd0 :
     (jmp_address_trap == 1'b1 || jmp_bus_trap == 1'b1) ? `MICROPC_ADDRESS_BUS_TRAP :
-    (    (branch_control == `BRANCH_movem_loop                 && movem_loop == 5'b10000) ||
-        (branch_control == `BRANCH_movem_reg                 && movem_reg[0] == 0) ||
-        (branch_control == `BRANCH_operand2                    && operand2[5:0] == 6'b0) ||
-        (branch_control == `BRANCH_special_01                && special != 2'b01) ||
-        (branch_control == `BRANCH_special_10                && special == 2'b10) ||
-        (branch_control == `BRANCH_condition_0                && condition == 1'b0) ||
-        (branch_control == `BRANCH_condition_1                && condition == 1'b1) ||
-        (branch_control == `BRANCH_result                    && result[15:0] == 16'hFFFF) ||
+    (   (branch_control == `BRANCH_movem_loop               && movem_loop == 5'b10000) ||
+        (branch_control == `BRANCH_movem_reg                && movem_reg[0] == 0) ||
+        (branch_control == `BRANCH_operand2                 && operand2[5:0] == 6'b0) ||
+        (branch_control == `BRANCH_special_01               && special != 2'b01) ||
+        (branch_control == `BRANCH_special_10               && special == 2'b10) ||
+        (branch_control == `BRANCH_condition_0              && condition == 1'b0) ||
+        (branch_control == `BRANCH_condition_1              && condition == 1'b1) ||
+        (branch_control == `BRANCH_result                   && result[15:0] == 16'hFFFF) ||
         (branch_control == `BRANCH_V                        && overflow == 1'b0) ||
-        (branch_control == `BRANCH_movep_16                    && ir[6] == 1'b0) ||
-        (branch_control == `BRANCH_stop_flag_wait_ir_decode    && stop_flag == 1'b1) ||
-        (branch_control == `BRANCH_ir                        && ir[7:0] != 8'b0) ||
-        (branch_control == `BRANCH_trace_flag_and_interrupt    && trace_flag == 1'b0 && interrupt_mask != 3'b000) ||
-        (branch_control == `BRANCH_group_0_flag                && group_0_flag == 1'b0)
+        (branch_control == `BRANCH_movep_16                 && ir[6] == 1'b0) ||
+        (branch_control == `BRANCH_stop_flag_wait_ir_decode && stop_flag == 1'b1) ||
+        (branch_control == `BRANCH_ir                       && ir[7:0] != 8'b0) ||
+        (branch_control == `BRANCH_trace_flag_and_interrupt && trace_flag == 1'b0 && interrupt_mask != 3'b000) ||
+        (branch_control == `BRANCH_group_0_flag             && group_0_flag == 1'b0)
     ) ? micro_pc_0 + { 5'd0, branch_offset } :
-    (branch_control == `BRANCH_stop_flag_wait_ir_decode && prefetch_ir_valid == 1'b1 && decoder_trap == 8'd0) ? decoder_micropc :
-    (branch_control == `BRANCH_trace_flag_and_interrupt && trace_flag == 1'b0 && interrupt_mask == 3'b000) ? `MICROPC_MAIN_LOOP :
-    (branch_control == `BRANCH_procedure    && branch_offset == `PROCEDURE_jump_to_main_loop) ? `MICROPC_MAIN_LOOP :
-    (branch_control == `BRANCH_procedure    && branch_offset == `PROCEDURE_call_load_ea && load_ea != 9'd0) ? load_ea :
-    (branch_control == `BRANCH_procedure    && branch_offset == `PROCEDURE_call_perform_ea_read) ? perform_ea_read :
-    (branch_control == `BRANCH_procedure && branch_offset == `PROCEDURE_call_perform_ea_write) ? perform_ea_write :
-    (branch_control == `BRANCH_procedure && branch_offset == `PROCEDURE_call_save_ea && save_ea != 9'd0) ? save_ea :
+    (branch_control == `BRANCH_stop_flag_wait_ir_decode && prefetch_ir_valid == 1'b1 && decoder_trap == 8'd0) ?         decoder_micropc :
+    (branch_control == `BRANCH_trace_flag_and_interrupt && trace_flag == 1'b0 && interrupt_mask == 3'b000) ?            `MICROPC_MAIN_LOOP :
+    (branch_control == `BRANCH_procedure && branch_offset == `PROCEDURE_jump_to_main_loop) ?                            `MICROPC_MAIN_LOOP :
+    (branch_control == `BRANCH_procedure && branch_offset == `PROCEDURE_call_load_ea && load_ea != 9'd0) ?              load_ea :
+    (branch_control == `BRANCH_procedure && branch_offset == `PROCEDURE_call_perform_ea_read) ?                         perform_ea_read :
+    (branch_control == `BRANCH_procedure && branch_offset == `PROCEDURE_call_perform_ea_write) ?                        perform_ea_write :
+    (branch_control == `BRANCH_procedure && branch_offset == `PROCEDURE_call_save_ea && save_ea != 9'd0) ?              save_ea :
 
-    (branch_control == `BRANCH_procedure && branch_offset == `PROCEDURE_call_read && load_ea != 9'd0) ? load_ea :
-    (branch_control == `BRANCH_procedure && branch_offset == `PROCEDURE_call_read && load_ea == 9'd0) ? perform_ea_read :
+    (branch_control == `BRANCH_procedure && branch_offset == `PROCEDURE_call_read && load_ea != 9'd0) ?                 load_ea :
+    (branch_control == `BRANCH_procedure && branch_offset == `PROCEDURE_call_read && load_ea == 9'd0) ?                 perform_ea_read :
 
-    (branch_control == `BRANCH_procedure && branch_offset == `PROCEDURE_call_write) ? perform_ea_write :
+    (branch_control == `BRANCH_procedure && branch_offset == `PROCEDURE_call_write) ?                                   perform_ea_write :
 
-    (branch_control == `BRANCH_procedure && branch_offset == `PROCEDURE_call_trap) ? `MICROPC_TRAP_ENTRY :
-    (branch_control == `BRANCH_procedure && branch_offset == `PROCEDURE_return) ? micro_pc_1 :
-    (branch_control == `BRANCH_procedure && branch_offset == `PROCEDURE_interrupt_mask && interrupt_mask == 3'b000) ? `MICROPC_MAIN_LOOP :
+    (branch_control == `BRANCH_procedure && branch_offset == `PROCEDURE_call_trap) ?                                    `MICROPC_TRAP_ENTRY :
+    (branch_control == `BRANCH_procedure && branch_offset == `PROCEDURE_return) ?                                       micro_pc_1 :
+    (branch_control == `BRANCH_procedure && branch_offset == `PROCEDURE_interrupt_mask && interrupt_mask == 3'b000) ?   `MICROPC_MAIN_LOOP :
     (    (branch_control == `BRANCH_procedure && branch_offset == `PROCEDURE_wait_finished && finished == 1'b0) ||
         (branch_control == `BRANCH_procedure && branch_offset == `PROCEDURE_wait_prefetch_valid && prefetch_ir_valid == 1'b0) ||
         (branch_control == `BRANCH_procedure && branch_offset == `PROCEDURE_wait_prefetch_valid_32 && prefetch_ir_valid_32 == 1'b0) ||
@@ -2933,23 +2951,19 @@ assign micro_pc =
     micro_pc_0 + 9'd1
 ;
 
-reg [8:0] micro_pc_0 = 9'd0;
-reg [8:0] micro_pc_1;
-reg [8:0] micro_pc_2;
-reg [8:0] micro_pc_3;
-
-always @(posedge clock) begin
-    if(reset)     micro_pc_0 <= 9'd0;
-    else        micro_pc_0 <= micro_pc;
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0) micro_pc_0 <= 9'd0;
+    else                micro_pc_0 <= micro_pc;
 end
 
-always @(posedge clock) begin
-    if(reset) begin
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0) begin
         micro_pc_1 <= 9'd0;
         micro_pc_2 <= 9'd0;
         micro_pc_3 <= 9'd0;
     end
-    else if(branch_control == `BRANCH_stop_flag_wait_ir_decode && prefetch_ir_valid == 1'b1 && decoder_trap == 8'd0) begin
+    else if(branch_control == `BRANCH_stop_flag_wait_ir_decode && prefetch_ir_valid == 1'b1 && decoder_trap == 8'd0)
+    begin
         micro_pc_1 <= micro_pc_0 + { 5'd0, branch_offset };
         micro_pc_2 <= micro_pc_1;
         micro_pc_3 <= micro_pc_2;
@@ -2999,4 +3013,3 @@ always @(posedge clock) begin
 end
 
 endmodule
-

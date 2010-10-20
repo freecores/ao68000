@@ -55,5 +55,6 @@ defparam ram.width_a = 32;
 defparam ram.widthad_a = 3;
 defparam ram.outdata_reg_a = "UNREGISTERED";
 defparam ram.width_byteena_a = 4;
+defparam ram.init_file = "./../altera_specific/empty_ram.mif";
 
 endmodule

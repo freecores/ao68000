@@ -39,7 +39,6 @@
  */
 module alu_mult_div(
 	input clock,
-	input reset,
 
 	input [31:0] operand1,
 	input [31:0] operand2,
@@ -67,7 +66,6 @@ defparam divu.lpm_widthn = 32;
 defparam divu.lpm_widthd = 16;
 defparam divu.lpm_nrepresentation = "UNSIGNED";
 defparam divu.lpm_drepresentation = "UNSIGNED";
-defparam divu.lpm_remainderpositive = "TRUE";
 defparam divs.lpm_hint = "LPM_REMAINDERPOSITIVE=TRUE";
 defparam divu.lpm_pipeline = 30;
 
@@ -84,7 +82,6 @@ defparam divs.lpm_widthn = 32;
 defparam divs.lpm_widthd = 16;
 defparam divs.lpm_nrepresentation = "SIGNED";
 defparam divs.lpm_drepresentation = "SIGNED";
-defparam divs.lpm_remainderpositive = "FALSE";
 defparam divs.lpm_hint = "LPM_REMAINDERPOSITIVE=FALSE";
 defparam divs.lpm_pipeline = 30;
 
