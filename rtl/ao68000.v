@@ -496,6 +496,8 @@ wire        prefetch_ir_valid_32;
 wire [3:0]  ea_type;
 wire [2:0]  ea_mod;
 wire [2:0]  ea_reg;
+wire [17:0] decoder_alu;
+wire [17:0] decoder_alu_reg;
 
 bus_control bus_control_m(
     .CLK_I                  (CLK_I),
@@ -627,7 +629,9 @@ registers registers_m(
     .An_input                       (An_input),
     .An_input_control               (`MICRO_DATA_an_input),
     .Dn_address                     (Dn_address),
-    .Dn_address_control             (`MICRO_DATA_dn_address)
+    .Dn_address_control             (`MICRO_DATA_dn_address),
+    .decoder_alu                    (decoder_alu),
+    .decoder_alu_reg                (decoder_alu_reg)
 );
 
 memory_registers memory_registers_m(
@@ -654,6 +658,7 @@ decoder decoder_m(
     .ir                 (prefetch_ir[79:64]),
     .decoder_trap       (decoder_trap),
     .decoder_micropc    (decoder_micropc),
+    .decoder_alu        (decoder_alu),
     
     .load_ea            (load_ea),
     .perform_ea_read    (perform_ea_read),
@@ -684,7 +689,8 @@ alu alu_m(
     .sr                 (sr),
     .result             (result),
     .alu_signal         (alu_signal),
-    .alu_mult_div_ready (alu_mult_div_ready)
+    .alu_mult_div_ready (alu_mult_div_ready),
+    .decoder_alu_reg    (decoder_alu_reg)
 );
 
 microcode_branch microcode_branch_m(
@@ -1728,7 +1734,10 @@ module registers(
     input [1:0] An_input_control,
 
     output [2:0] Dn_address,
-    input Dn_address_control
+    input Dn_address_control,
+    
+    input [17:0] decoder_alu,
+    output reg [17:0] decoder_alu_reg
 );
 
 reg [31:0] pc_valid;
@@ -1913,6 +1922,12 @@ always @(posedge clock or negedge reset_n) begin
     if(reset_n == 1'b0)                                         ir <= 16'b0;
     else if(ir_control == `IR_LOAD_WHEN_PREFETCH_VALID && prefetch_ir_valid == 1'b1 && stop_flag == 1'b0)
                                                                 ir <= prefetch_ir[79:64];
+end
+
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0)                                         decoder_alu_reg <= 18'b0;
+    else if(ir_control == `IR_LOAD_WHEN_PREFETCH_VALID && prefetch_ir_valid == 1'b1 && stop_flag == 1'b0)
+                                                                decoder_alu_reg <= decoder_alu;
 end
 
 always @(posedge clock or negedge reset_n) begin
@@ -2141,24 +2156,25 @@ endmodule
  * and ea_type registers in the registers module.
  */
 module decoder(
-    input clock,
-    input reset_n,
+    input           clock,
+    input           reset_n,
 
-    input supervisor,
-    input [15:0] ir,
+    input           supervisor,
+    input [15:0]    ir,
 
     // zero: no trap
-    output [7:0] decoder_trap,
-    output [8:0] decoder_micropc,
+    output [7:0]    decoder_trap,
+    output [8:0]    decoder_micropc,
+    output [17:0]   decoder_alu,
     
-    output [8:0] save_ea,
-    output [8:0] perform_ea_write,
-    output [8:0] perform_ea_read,
-    output [8:0] load_ea,
+    output [8:0]    save_ea,
+    output [8:0]    perform_ea_write,
+    output [8:0]    perform_ea_read,
+    output [8:0]    load_ea,
     
-    input [3:0] ea_type,
-    input [2:0] ea_mod,
-    input [2:0] ea_reg
+    input [3:0]     ea_type,
+    input [2:0]     ea_mod,
+    input [2:0]     ea_reg
 );
 
 parameter [7:0]
@@ -2499,6 +2515,57 @@ assign save_ea =
     9'd0 // no ea needed
 ;
 
+// ALU decoding optimization
+// Thanks to Frederic Requin
+// not used: 7, 13, 17
+assign decoder_alu[0]  = ((ir[15:12] == 4'b0000 && ir[11:9] == 3'b000) // OR
+                       || (ir[15:12] == 4'b1000));
+assign decoder_alu[1]  = ((ir[15:12] == 4'b0000 && ir[11:9] == 3'b001) // AND
+                       || (ir[15:12] == 4'b1100));
+assign decoder_alu[2]  = ((ir[15:12] == 4'b0000 && ir[11:9] == 3'b101) // EOR
+                       || (ir[15:12] == 4'b1011 && (ir[8:7] == 2'b10 || ir[8:6] == 3'b110) && ir[5:3] != 3'b001));
+assign decoder_alu[3]  = ((ir[15:12] == 4'b0000 && ir[11:9] == 3'b011) // ADD
+                       || (ir[15:12] == 4'b1101)
+                       || (ir[15:12] == 4'b0101 && ir[8] == 1'b0));
+assign decoder_alu[4]  = ((ir[15:12] == 4'b0000 && ir[11:9] == 3'b010) // SUB
+                       || (ir[15:12] == 4'b1001)
+                       || (ir[15:12] == 4'b0101 && ir[8] == 1'b1));
+assign decoder_alu[5]  = ((ir[15:12] == 4'b0000 && ir[11:9] == 3'b110) // CMP
+                       || (ir[15:12] == 4'b1011 && (ir[8:7] == 2'b10 || ir[8:6] == 3'b110) && ir[5:3] == 3'b001)
+                       || (ir[15:12] == 4'b1011 && (ir[8:7] == 2'b00 || ir[8:6] == 3'b010)));
+assign decoder_alu[6]  = ((ir[15:12] == 4'b1101)                       // ADDA,ADDQ
+                       || (ir[15:12] == 4'b0101 && ir[8] == 1'b0));
+assign decoder_alu[7]  = ((ir[15:12] == 4'b1001)                       // SUBA,CMPA,SUBQ
+                       || (ir[15:12] == 4'b1011)
+                       || (ir[15:12] == 4'b0101 && ir[8] == 1'b1));
+assign decoder_alu[8]  = (((ir[7:6] == 2'b11 && ir[10:9] == 2'b00)     // ASL
+                       ||  (ir[7:6] != 2'b11 && ir[4:3] == 2'b00)) && ir[8] == 1'b1);
+assign decoder_alu[9]  = (((ir[7:6] == 2'b11 && ir[10:9] == 2'b01)     // LSL
+                       ||  (ir[7:6] != 2'b11 && ir[4:3] == 2'b01)) && ir[8] == 1'b1);
+assign decoder_alu[10] = (((ir[7:6] == 2'b11 && ir[10:9] == 2'b11)     // ROL
+                       ||  (ir[7:6] != 2'b11 && ir[4:3] == 2'b11)) && ir[8] == 1'b1);
+assign decoder_alu[11] = (((ir[7:6] == 2'b11 && ir[10:9] == 2'b10)     // ROXL
+                       ||  (ir[7:6] != 2'b11 && ir[4:3] == 2'b10)) && ir[8] == 1'b1);
+assign decoder_alu[12] = (((ir[7:6] == 2'b11 && ir[10:9] == 2'b00)     // ASR
+                       ||  (ir[7:6] != 2'b11 && ir[4:3] == 2'b00)) && ir[8] == 1'b0);
+assign decoder_alu[13] = (((ir[7:6] == 2'b11 && ir[10:9] == 2'b01)     // LSR
+                       ||  (ir[7:6] != 2'b11 && ir[4:3] == 2'b01)) && ir[8] == 1'b0);
+assign decoder_alu[14] = (((ir[7:6] == 2'b11 && ir[10:9] == 2'b11)     // ROR
+                       ||  (ir[7:6] != 2'b11 && ir[4:3] == 2'b11)) && ir[8] == 1'b0);
+assign decoder_alu[15] = (((ir[7:6] == 2'b11 && ir[10:9] == 2'b10)     // ROXR
+                       ||  (ir[7:6] != 2'b11 && ir[4:3] == 2'b10)) && ir[8] == 1'b0);
+assign decoder_alu[16] = ((ir[15:8] == 8'b0100_0110)                   // SR operations
+                       || (ir[15:0] == 16'b0100_1110_0111_0011)
+                       || (ir[15:0] == 16'b0100_1110_0111_0010)
+                       || (ir[15:0] == 16'b0000_000_0_01_111100)
+                       || (ir[15:0] == 16'b0000_001_0_01_111100)
+                       || (ir[15:0] == 16'b0000_101_0_01_111100));
+assign decoder_alu[17] = ((ir[15:8] == 8'b0100_0100)                   // CCR operations
+                       || (ir[15:0] == 16'b0100_1110_0111_0111)
+                       || (ir[15:0] == 16'b0000_000_0_00_111100)
+                       || (ir[15:0] == 16'b0000_001_0_00_111100)
+                       || (ir[15:0] == 16'b0000_101_0_00_111100));
+
 endmodule
 
 /***********************************************************************************************************************
@@ -2576,7 +2643,8 @@ module alu(
     output reg [31:0] result,
     
     output reg alu_signal,
-    output alu_mult_div_ready
+    output alu_mult_div_ready,
+    input [17:0] decoder_alu_reg
 );
 
 //****************************************************** Altera-specific multiplication and division modules START
@@ -2697,6 +2765,11 @@ assign alu_mult_div_ready = (div_count == 5'd1 || div_count == 5'd0);
 reg [2:0] interrupt_mask_copy;
 reg was_interrupt;
 
+// Bit being shifted left
+wire lbit = (`Dm & decoder_alu_reg[10]) | (sr[4] & decoder_alu_reg[11]);
+// Bit being shifted right
+wire rbit = (`Dm & decoder_alu_reg[12]) | (operand1[0] & decoder_alu_reg[14]) | (sr[4] & decoder_alu_reg[15]);
+
 always @(posedge clock or negedge reset_n) begin
     if(reset_n == 1'b0) begin
         sr <= { 1'b0, 1'b0, 1'b1, 2'b0, 3'b111, 8'b0 };
@@ -2761,8 +2834,6 @@ always @(posedge clock or negedge reset_n) begin
                 // CCR: no change
             end
 
-            
-
             `ALU_SIGN_EXTEND: begin
                 // move operand1 with sign-extension to result
                 if(size[1] == 1'b1) begin
@@ -2777,30 +2848,15 @@ always @(posedge clock or negedge reset_n) begin
             `ALU_ARITHMETIC_LOGIC: begin
 
                 // OR,OR to mem,OR to Dn
-                if(         (ir[15:12] == 4'b0000 && ir[11:9] == 3'b000) ||
-                            (ir[15:12] == 4'b1000)
-                )             result[31:0] = operand1[31:0] | operand2[31:0];
+                if(decoder_alu_reg[0])                              result[31:0] = operand1[31:0] | operand2[31:0];
                 // AND,AND to mem,AND to Dn
-                else if(     (ir[15:12] == 4'b0000 && ir[11:9] == 3'b001) ||
-                            (ir[15:12] == 4'b1100)
-                )             result[31:0] = operand1[31:0] & operand2[31:0];
+                else if(decoder_alu_reg[1])                         result[31:0] = operand1[31:0] & operand2[31:0];
                 // EORI,EOR
-                else if(     (ir[15:12] == 4'b0000 && ir[11:9] == 3'b101) ||
-                            (ir[15:12] == 4'b1011 && (ir[8:6] == 3'b100 || ir[8:6] == 3'b101 || ir[8:6] == 3'b110) && ir[5:3] != 3'b001)
-                )            result[31:0] = operand1[31:0] ^ operand2[31:0];
+                else if(decoder_alu_reg[2])                         result[31:0] = operand1[31:0] ^ operand2[31:0];
                 // ADD,ADD to mem,ADD to Dn,ADDQ
-                else if(     (ir[15:12] == 4'b0000 && ir[11:9] == 3'b011) ||
-                            (ir[15:12] == 4'b1101) ||
-                            (ir[15:12] == 4'b0101 && ir[8] == 1'b0)
-                )             result[31:0] = operand1[31:0] + operand2[31:0];
+                else if(decoder_alu_reg[3])                         result[31:0] = operand1[31:0] + operand2[31:0];
                 // SUBI,CMPI,CMPM,SUB to mem,SUB to Dn,CMP,SUBQ
-                else if(     (ir[15:12] == 4'b0000 && ir[11:9] == 3'b010) ||
-                            (ir[15:12] == 4'b0000 && ir[11:9] == 3'b110) ||
-                            (ir[15:12] == 4'b1011 && (ir[8:6] == 3'b100 || ir[8:6] == 3'b101 || ir[8:6] == 3'b110) && ir[5:3] == 3'b001)     ||
-                            (ir[15:12] == 4'b1001) ||
-                            (ir[15:12] == 4'b1011 && (ir[8:6] == 3'b000 || ir[8:6] == 3'b001 || ir[8:6] == 3'b010)) ||
-                            (ir[15:12] == 4'b0101 && ir[8] == 1'b1)
-                )            result[31:0] = operand1[31:0] - operand2[31:0];
+                else if(decoder_alu_reg[4] | decoder_alu_reg[5])    result[31:0] = operand1[31:0] - operand2[31:0];
 
                 // Z
                 sr[2] <= `Z;
@@ -2808,30 +2864,21 @@ always @(posedge clock or negedge reset_n) begin
                 sr[3] <= `Rm;
 
                 // CMPI,CMPM,CMP
-                if( (ir[15:12] == 4'b0000 && ir[11:9] == 3'b110) ||
-                    (ir[15:12] == 4'b1011 && (ir[8:6] == 3'b100 || ir[8:6] == 3'b101 || ir[8:6] == 3'b110) && ir[5:3] == 3'b001) ||
-                    (ir[15:12] == 4'b1011 && (ir[8:6] == 3'b000 || ir[8:6] == 3'b001 || ir[8:6] == 3'b010))
-                ) begin
+                if(decoder_alu_reg[5]) begin
                     // C,V
                     sr[0] <= (`Sm & ~`Dm) | (`Rm & ~`Dm) | (`Sm & `Rm);
                     sr[1] <= (~`Sm & `Dm & ~`Rm) | (`Sm & ~`Dm & `Rm);
                     // X not affected
                 end
                 // ADDI,ADD to mem,ADD to Dn,ADDQ
-                else if(     (ir[15:12] == 4'b0000 && ir[11:9] == 3'b011) ||
-                            (ir[15:12] == 4'b1101) ||
-                            (ir[15:12] == 4'b0101 && ir[8] == 1'b0)
-                ) begin
+                else if(decoder_alu_reg[3]) begin
                     // C,X,V
                     sr[0] <= (`Sm & `Dm) | (~`Rm & `Dm) | (`Sm & ~`Rm);
                     sr[4] <= (`Sm & `Dm) | (~`Rm & `Dm) | (`Sm & ~`Rm); //=ccr[0];
                     sr[1] <= (`Sm & `Dm & ~`Rm) | (~`Sm & ~`Dm & `Rm);
                 end
                 // SUBI,SUB to mem,SUB to Dn,SUBQ
-                else if(     (ir[15:12] == 4'b0000 && ir[11:9] == 3'b010) ||
-                            (ir[15:12] == 4'b1001) ||
-                            (ir[15:12] == 4'b0101 && ir[8] == 1'b1)
-                ) begin
+                else if(decoder_alu_reg[4]) begin
                     // C,X,V
                     sr[0] <= (`Sm & ~`Dm) | (`Rm & ~`Dm) | (`Sm & `Rm);
                     sr[4] <= (`Sm & ~`Dm) | (`Rm & ~`Dm) | (`Sm & `Rm); //=ccr[0];
@@ -2862,7 +2909,7 @@ always @(posedge clock or negedge reset_n) begin
                     
                     result[7:4] = result[17:14];
                     result[3:0] = result[11:8];
-                    
+
                     // C
                     sr[0] <= (result[19:14] > 6'd9) ? 1'b1 : 1'b0;
                     // X = C
@@ -2873,7 +2920,6 @@ always @(posedge clock or negedge reset_n) begin
                 end
                 // SBCD
                 else if( ir[14:12] == 3'b000 ) begin
-                
                     result[13:8] = 6'd32 + {2'b0, operand1[3:0]} - {2'b0, operand2[3:0]} - {5'b0, sr[4]};
                     result[19:14] = 6'd32 + {2'b0, operand1[7:4]} - {2'b0, operand2[7:4]};
                     
@@ -2923,22 +2969,14 @@ always @(posedge clock or negedge reset_n) begin
             end
 
             `ALU_ASL_LSL_ROL_ROXL_ASR_LSR_ROR_ROXR_prepare: begin
-
-                if(size[0] == 1'b1)         result[7:0] = operand1[7:0];
-                else if(size[1] == 1'b1)    result[15:0] = operand1[15:0];
-                else if(size[2] == 1'b1)    result[31:0] = operand1[31:0];
-
-                // X for ASL
-                //if(operand2[5:0] > 6'b0 && ir[8] == 1'b1 && ((ir[7:6] == 2'b11 && ir[10:9] == 2'b00) || (ir[7:6] != 2'b11 && ir[4:3] == 2'b00)) ) begin
-                    // X set to Dm
-                //    sr[4] <= `Dm;
-                //end
-                // else X not affected
-
+                // 32-bit load even for 8-bit and 16-bit operations
+                // The extra bits will be anyway discarded during register / memory write
+                result[31:0] = operand1[31:0];
+                
                 // V cleared
                 sr[1] <= 1'b0;
                 // C for ROXL,ROXR: set to X
-                if( (ir[7:6] == 2'b11 && ir[10:9] == 2'b10) || (ir[7:6] != 2'b11 && ir[4:3] == 2'b10) ) begin
+                if(decoder_alu_reg[11] | decoder_alu_reg[15]) begin
                     sr[0] <= sr[4];
                 end
                 else begin
@@ -2953,78 +2991,29 @@ always @(posedge clock or negedge reset_n) begin
             end
 
             `ALU_ASL_LSL_ROL_ROXL_ASR_LSR_ROR_ROXR: begin
+                // ASL / LSL / ROL / ROXL
+                if (decoder_alu_reg[8] | decoder_alu_reg[9] | decoder_alu_reg[10] | decoder_alu_reg[11]) begin
+                    result[31:0] = {operand1[30:0], lbit};
 
-                // ASL
-                if( ((ir[7:6] == 2'b11 && ir[10:9] == 2'b00) || (ir[7:6] != 2'b11 && ir[4:3] == 2'b00)) && ir[8] == 1'b1) begin
-                    result[31:0] = {operand1[30:0], 1'b0};
-
-                    sr[1] <= (sr[1] == 1'b0)? (`Rm != `Dm) : 1'b1; // V
-                    sr[0] <= `Dm;           // C
-                    sr[4] <= `Dm;           // X
+                    sr[0] <= `Dm; // C for ASL / LSL / ROL / ROXL
+                    if (decoder_alu_reg[8])
+                        sr[1] <= (sr[1] == 1'b0)? (`Rm != `Dm) : 1'b1; // V for ASL
+                    else
+                        sr[1] <= 1'b0; // V for LSL / ROL / ROXL
+                   
+                    if (!decoder_alu_reg[10]) sr[4] <= `Dm; // X for ASL / LSL / ROXL
                 end
-                // LSL
-                else if( ((ir[7:6] == 2'b11 && ir[10:9] == 2'b01) || (ir[7:6] != 2'b11 && ir[4:3] == 2'b01)) && ir[8] == 1'b1) begin
-                    result[31:0] = {operand1[30:0], 1'b0};
-
-                    sr[1] <= 1'b0;          // V
-                    sr[0] <= `Dm;           // C
-                    sr[4] <= `Dm;           // X
-                end
-                // ROL
-                else if( ((ir[7:6] == 2'b11 && ir[10:9] == 2'b11) || (ir[7:6] != 2'b11 && ir[4:3] == 2'b11)) && ir[8] == 1'b1) begin
-                    result[31:0] = {operand1[30:0], `Dm};
-
-                    sr[1] <= 1'b0;          // V
-                    sr[0] <= `Dm;           // C
-                                            // X not affected
-                end
-                // ROXL
-                else if( ((ir[7:6] == 2'b11 && ir[10:9] == 2'b10) || (ir[7:6] != 2'b11 && ir[4:3] == 2'b10)) && ir[8] == 1'b1) begin
-                    result[31:0] = {operand1[30:0], sr[4]};
-
-                    sr[1] <= 1'b0;          // V
-                    sr[0] <= `Dm;           // C
-                    sr[4] <= `Dm;           // X
-                end
-                // ASR
-                else if( ((ir[7:6] == 2'b11 && ir[10:9] == 2'b00) || (ir[7:6] != 2'b11 && ir[4:3] == 2'b00)) && ir[8] == 1'b0) begin
-                    if(size[0] == 1'b1)         result[7:0] = { operand1[7], operand1[7:1] };
-                    else if(size[1] == 1'b1)    result[15:0] = { operand1[15], operand1[15:1] };
-                    else if(size[2] == 1'b1)    result[31:0] = { operand1[31], operand1[31:1] };
-
-                    sr[1] <= 1'b0;          // V
-                    sr[0] <= operand1[0];   // C
-                    sr[4] <= operand1[0];   // X
-                end
-                // LSR
-                else if( ((ir[7:6] == 2'b11 && ir[10:9] == 2'b01) || (ir[7:6] != 2'b11 && ir[4:3] == 2'b01)) && ir[8] == 1'b0) begin
-                    if(size[0] == 1'b1)         result[7:0] = { 1'b0, operand1[7:1] };
-                    else if(size[1] == 1'b1)    result[15:0] = { 1'b0, operand1[15:1] };
-                    else if(size[2] == 1'b1)    result[31:0] = { 1'b0, operand1[31:1] };
-
-                    sr[1] <= 1'b0;          // V
-                    sr[0] <= operand1[0];   // C
-                    sr[4] <= operand1[0];   // X
-                end
-                // ROR
-                else if( ((ir[7:6] == 2'b11 && ir[10:9] == 2'b11) || (ir[7:6] != 2'b11 && ir[4:3] == 2'b11)) && ir[8] == 1'b0) begin
-                    if(size[0] == 1'b1)         result[7:0] = { operand1[0], operand1[7:1] };
-                    else if(size[1] == 1'b1)    result[15:0] = { operand1[0], operand1[15:1] };
-                    else if(size[2] == 1'b1)    result[31:0] = { operand1[0], operand1[31:1] };
-
-                    sr[1] <= 1'b0;          // V
-                    sr[0] <= operand1[0];   // C
-                    // X not affected
-                end
-                // ROXR
-                else if( ((ir[7:6] == 2'b11 && ir[10:9] == 2'b10) || (ir[7:6] != 2'b11 && ir[4:3] == 2'b10)) && ir[8] == 1'b0) begin
-                    if(size[0] == 1'b1)         result[7:0] = {sr[4], operand1[7:1]};
-                    else if(size[1] == 1'b1)    result[15:0] = {sr[4], operand1[15:1]};
-                    else if(size[2] == 1'b1)    result[31:0] = {sr[4], operand1[31:1]};
-
-                    sr[1] <= 1'b0;          // V
-                    sr[0] <= operand1[0];   // C
-                    sr[4] <= operand1[0];   // X
+                // ASR / LSR / ROR / ROXR
+                else begin
+                    result[6:0]   = operand1[7:1];
+                    result[7]     = (size[0]) ? rbit : operand1[8];
+                    result[14:8]  = operand1[15:9];
+                    result[15]    = (size[1]) ? rbit : operand1[16];
+                    result[30:16] = operand1[31:17];
+                    result[31]    = rbit;
+                    sr[0] <= operand1[0]; // C for ASR / LSR / ROR / ROXR
+                    sr[1] <= 1'b0;        // V for ASR / LSR / ROR / ROXR
+                    if (!decoder_alu_reg[14]) sr[4] <= operand1[0]; // X for ASR / LSR / ROXR
                 end
 
                 // N set
@@ -3056,12 +3045,10 @@ always @(posedge clock or negedge reset_n) begin
                 // operation requires that operand2 was sign extended
                 
                 // ADDA,ADDQ
-                if( ir[15:12] == 4'b1101 || (ir[15:12] == 4'b0101 && ir[8] == 1'b0) )
-                    result[31:0] = operand1[31:0] + operand2[31:0];
+                if(decoder_alu_reg[6])  result[31:0] = operand1[31:0] + operand2[31:0];
                 // SUBA,CMPA,SUBQ
-                else if( ir[15:12] == 4'b1001 || ir[15:12] == 4'b1011 || (ir[15:12] == 4'b0101 && ir[8] == 1'b1) )
-                    result[31:0] = operand1[31:0] - operand2[31:0];
-                
+                else                    result[31:0] = operand1[31:0] - operand2[31:0];
+
                 // for CMPA
                 if( ir[15:12] == 4'b1011 ) begin
                     // Z
@@ -3218,11 +3205,11 @@ always @(posedge clock or negedge reset_n) begin
 
             `ALU_NEGX_CLR_NEG_NOT_NBCD_SWAP_EXT: begin
                 // NEGX / CLR / NEG / NOT
+                // Optimization thanks to Frederic Requin
                 if ((ir[11:8] == 4'b0000) || (ir[11:8] == 4'b0010) || (ir[11:8] == 4'b0100) || (ir[11:8] == 4'b0110))
                     result = 32'b0 - (operand1[31:0] & {32{ir[10] | ~ir[9]}}) - ((sr[4] & ~ir[10] & ~ir[9]) | (ir[10] & ir[9]));
                 // NBCD
                 else if( ir[11:6] == 6'b1000_00 ) begin
-                    
                     result[3:0] = 5'd25 - operand1[3:0];
                     result[7:4] = (operand1[3:0] > 4'd9) ? (5'd24 - operand1[7:4]) : (5'd25 - operand1[7:4]);
                     
@@ -3304,13 +3291,9 @@ always @(posedge clock or negedge reset_n) begin
             `ALU_MOVE_TO_CCR_SR_RTE_RTR_STOP_LOGIC_TO_CCR_SR: begin
 
                 // MOVE TO SR,RTE,STOP,ORI to SR,ANDI to SR,EORI to SR
-                if( ir[15:8] == 8'b0100_0110 || ir[15:0] == 16'b0100_1110_0111_0011 || ir[15:0] == 16'b0100_1110_0111_0010 ||
-                    ir[15:0] == 16'b0000_000_0_01_111100 || ir[15:0] == 16'b0000_001_0_01_111100 || ir[15:0] == 16'b0000_101_0_01_111100
-                )         sr <= { operand1[15], 1'b0, operand1[13], 2'b0, operand1[10:8], 3'b0, operand1[4:0] };
+                if(decoder_alu_reg[16]) sr <= { operand1[15], 1'b0, operand1[13], 2'b0, operand1[10:8], 3'b0, operand1[4:0] };
                 // MOVE TO CCR,RTR,ORI to CCR,ANDI to CCR,EORI to CCR
-                else if(     ir[15:8] == 8'b0100_0100 || ir[15:0] == 16'b0100_1110_0111_0111 ||
-                            ir[15:0] == 16'b0000_000_0_00_111100 || ir[15:0] == 16'b0000_001_0_00_111100 || ir[15:0] == 16'b0000_101_0_00_111100
-                )        sr <= { sr[15:8], 3'b0, operand1[4:0] };
+                else                    sr <= { sr[15:8], 3'b0, operand1[4:0] };
             end
 
             `ALU_SIMPLE_MOVE: begin
