@@ -92,7 +92,7 @@ Signals</h2></td></tr>
 </ul>
 <p>Currently this module contains <em>altsyncram</em> instantiations from Altera Megafunction/LPM library. </p>
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02077">2077</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02044">2044</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 <hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="a09281e3224878c570c81844785844fe0"></a><!-- doxytag: member="memory_registers::ALWAYS_29" ref="a09281e3224878c570c81844785844fe0" args="clock, reset_n" -->
 <div class="memitem">
@@ -113,12 +113,12 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02110">2110</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02077">2077</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 <div class="fragment"><pre class="fragment"> 
-<a name="l02110"></a>02110 <span class="vhdlkeyword">always</span> @(<span class="vhdlkeyword">posedge</span> <a class="code" href="classmemory__registers.html#a06690d046213efc68334643946af2b16">clock</a> <span class="vhdlkeyword">or</span> <span class="vhdlkeyword">negedge</span> <a class="code" href="classmemory__registers.html#a52bffc13966ddfc557c3c3a2cece1d97">reset_n</a>) <span class="vhdlkeyword">begin</span>
-<a name="l02111"></a>02111     <span class="vhdlkeyword">if</span>(<a class="code" href="classmemory__registers.html#a52bffc13966ddfc557c3c3a2cece1d97">reset_n</a> == <span class="vhdllogic">1&#39;b0</span>)                                 <a class="code" href="classmemory__registers.html#a736b71ba5d8851ef8e883408751c9380">usp</a> &lt;= <span class="vhdllogic">32&#39;d0</span>;
-<a name="l02112"></a>02112     <span class="vhdlkeyword">else</span> <span class="vhdlkeyword">if</span>(<a class="code" href="classmemory__registers.html#a8a67810353708d3652f619623692a545">An_address</a> == <span class="vhdllogic">4&#39;b0111</span> &amp;&amp; <a class="code" href="classmemory__registers.html#af97dfc643a2fa9ae191cb68acb23ea91">An_write_enable</a>)   <a class="code" href="classmemory__registers.html#a736b71ba5d8851ef8e883408751c9380">usp</a> &lt;= <a class="code" href="classmemory__registers.html#a8e3deabb065d3e6aaaf647a83e7c84e9">An_input</a>;
-<a name="l02113"></a>02113 <span class="vhdlkeyword">end</span>
+<a name="l02077"></a>02077 <span class="vhdlkeyword">always</span> @(<span class="vhdlkeyword">posedge</span> <a class="code" href="classmemory__registers.html#a06690d046213efc68334643946af2b16">clock</a> <span class="vhdlkeyword">or</span> <span class="vhdlkeyword">negedge</span> <a class="code" href="classmemory__registers.html#a52bffc13966ddfc557c3c3a2cece1d97">reset_n</a>) <span class="vhdlkeyword">begin</span>
+<a name="l02078"></a>02078     <span class="vhdlkeyword">if</span>(<a class="code" href="classmemory__registers.html#a52bffc13966ddfc557c3c3a2cece1d97">reset_n</a> == <span class="vhdllogic">1&#39;b0</span>)                                 <a class="code" href="classmemory__registers.html#a736b71ba5d8851ef8e883408751c9380">usp</a> &lt;= <span class="vhdllogic">32&#39;d0</span>;
+<a name="l02079"></a>02079     <span class="vhdlkeyword">else</span> <span class="vhdlkeyword">if</span>(<a class="code" href="classmemory__registers.html#a8a67810353708d3652f619623692a545">An_address</a> == <span class="vhdllogic">4&#39;b0111</span> &amp;&amp; <a class="code" href="classmemory__registers.html#af97dfc643a2fa9ae191cb68acb23ea91">An_write_enable</a>)   <a class="code" href="classmemory__registers.html#a736b71ba5d8851ef8e883408751c9380">usp</a> &lt;= <a class="code" href="classmemory__registers.html#a8e3deabb065d3e6aaaf647a83e7c84e9">An_input</a>;
+<a name="l02080"></a>02080 <span class="vhdlkeyword">end</span>
 </pre></div>
 </div>
 </div>
@@ -134,7 +134,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02078">2078</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02045">2045</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -149,7 +149,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02079">2079</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02046">2046</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -164,7 +164,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02082">2082</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02049">2049</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -179,7 +179,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02083">2083</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02050">2050</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -194,7 +194,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02084">2084</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02051">2051</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -209,7 +209,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02085">2085</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02052">2052</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -224,7 +224,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02087">2087</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02054">2054</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -239,7 +239,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02089">2089</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02056">2056</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -254,7 +254,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02090">2090</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02057">2057</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -269,7 +269,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02091">2091</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02058">2058</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -284,7 +284,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02093">2093</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02060">2060</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -299,7 +299,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02094">2094</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02061">2061</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -314,7 +314,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02096">2096</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02063">2063</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -329,7 +329,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02097">2097</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02064">2064</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -344,7 +344,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02100">2100</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02067">2067</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -359,7 +359,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02102">2102</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02069">2069</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -374,7 +374,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02105">2105</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02072">2072</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -389,7 +389,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02148">2148</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02115">2115</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -404,7 +404,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02132">2132</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02099">2099</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -419,7 +419,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02116">2116</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l02083">2083</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -427,7 +427,7 @@ Signals</h2></td></tr>
 <li><a class="el" href="ao68000_8v_source.html">ao68000.v</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 15 2011 16:45:29 for ao68000 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 15 2011 16:54:37 for ao68000 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
 </body>

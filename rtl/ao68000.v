@@ -1790,19 +1790,6 @@ always @(posedge clock or negedge reset_n) begin
                 | ((size_control == `SIZE_6) && (ir[5:3] == 3'b000));
     end
 end
-/*OPTIM    
-    else if(size_control == `SIZE_BYTE)                         size <= 2'b00;
-    else if(size_control == `SIZE_WORD)                         size <= 2'b01;
-    else if(size_control == `SIZE_LONG)                         size <= 2'b10;
-    else if(size_control == `SIZE_1)                            size <= ( ir[7:6] == 2'b00 ) ? 2'b01 : 2'b10;
-    else if(size_control == `SIZE_1_PLUS)                       size <= ( ir[7:6] == 2'b10 ) ? 2'b01 : 2'b10;
-    else if(size_control == `SIZE_2)                            size <= ( ir[6] == 1'b0 ) ? 2'b01 : 2'b10;
-    else if(size_control == `SIZE_3)                            size <= ( ir[7:6] == 2'b00 ) ? 2'b00 : ( ( ir[7:6] == 2'b01 ) ? 2'b01 : 2'b10 );
-    else if(size_control == `SIZE_4)                            size <= ( ir[13:12] == 2'b01 ) ? 2'b00 : ( ( ir[13:12] == 2'b11 ) ? 2'b01 : 2'b10 );
-    else if(size_control == `SIZE_5)                            size <= ( ir[8] == 1'b0 ) ? 2'b01 : 2'b10;
-    else if(size_control == `SIZE_6)                            size <= ( ir[5:3] != 3'b000 ) ? 2'b00 : 2'b10;
-end
-*/
 
 always @(posedge clock or negedge reset_n) begin
     if(reset_n == 1'b0)                                         ea_reg <= 3'b000;
@@ -1895,26 +1882,6 @@ always @(posedge clock or negedge reset_n) begin
     else if(address_control == `ADDRESS_FROM_PC_INDEX_OFFSET)   address <= pc_valid + index + offset;
     else if(address_control == `ADDRESS_FROM_TRAP)              address <= {22'b0, trap[7:0], 2'b0};
 end
-/*OPTIM
-    else if(address_control == `ADDRESS_INCR_BY_SIZE)           address <=
-                                                                    (size == 2'b00 && ea_reg != 3'b111) ? address + 32'd1 :
-                                                                    (size == 2'b01 || (size == 2'b00 && ea_reg == 3'b111)) ? address + 32'd2 :
-                                                                    (size == 2'b10) ? address + 32'd4 :
-                                                                    address;
-    else if(address_control == `ADDRESS_DECR_BY_SIZE)           address <=
-                                                                    (size == 2'b00 && ea_reg != 3'b111) ? address - 32'd1 :
-                                                                    (size == 2'b01 || (size == 2'b00 && ea_reg == 3'b111)) ? address - 32'd2 :
-                                                                    (size == 2'b10) ? address - 32'd4 :
-                                                                    address;
-    else if(address_control == `ADDRESS_INCR_BY_2)              address <= address + 32'd2;
-    else if(address_control == `ADDRESS_FROM_AN_OUTPUT)         address <= An_output;
-    else if(address_control == `ADDRESS_FROM_BASE_INDEX_OFFSET) address <= address + index + offset;
-    else if(address_control == `ADDRESS_FROM_IMM_16)            address <= { {16{prefetch_ir[79]}}, prefetch_ir[79:64] };
-    else if(address_control == `ADDRESS_FROM_IMM_32)            address <= prefetch_ir[79:48];
-    else if(address_control == `ADDRESS_FROM_PC_INDEX_OFFSET)   address <= pc_valid + index + offset;
-    else if(address_control == `ADDRESS_FROM_TRAP)              address <= {22'b0, trap[7:0], 2'b0};
-end
-*/
 
 always @(posedge clock or negedge reset_n) begin
     if(reset_n == 1'b0)                                         address_type <= 1'b0;
@@ -2694,50 +2661,6 @@ always @(posedge clock or negedge reset_n) begin
     end
 end
 
-
-
-/*OPTIM
-
-wire [31:0] divu_quotient;
-wire [15:0] divu_remainder;
-wire [31:0] divs_quotient;
-wire [15:0] divs_remainder;
-
-// DIVU: 32-bit operand1 unsigned / 16-bit operand2 unsigned = {16-bit remainer unsigned, 16-bit quotient unsigned}
-// DIVU: division by 0: trap,   overflow when quotient > 16-bit signed integer, operands not affected
-lpm_divide divu_inst(
-    .clock(clock),
-    .numer(operand1[31:0]),
-    .denom(operand2[15:0]),
-    .quotient(divu_quotient),
-    .remain(divu_remainder)
-);
-defparam
-    divu_inst.lpm_widthn = 32,
-    divu_inst.lpm_widthd = 16,
-    divu_inst.lpm_nrepresentation = "UNSIGNED",
-    divu_inst.lpm_drepresentation = "UNSIGNED",
-    divu_inst.lpm_hint = "LPM_REMAINDERPOSITIVE=TRUE",
-    divu_inst.lpm_pipeline = 30;
-
-// DIVS: 32-bit operand1 signed / 16-bit operand2 signed = {16-bit remainer signed = sign of dividend, 16-bit quotient signed}
-// DIVS: division by 0: trap,   overflow when quotient > 16-bit signed integer, operands not affected
-lpm_divide divs_inst(
-    .clock(clock),
-    .numer(operand1[31:0]),
-    .denom(operand2[15:0]),
-    .quotient(divs_quotient),
-    .remain(divs_remainder)
-);
-defparam
-    divs_inst.lpm_widthn = 32,
-    divs_inst.lpm_widthd = 16,
-    divs_inst.lpm_nrepresentation = "SIGNED",
-    divs_inst.lpm_drepresentation = "SIGNED",
-    divs_inst.lpm_hint = "LPM_REMAINDERPOSITIVE=FALSE",
-    divs_inst.lpm_pipeline = 30;
-*/
-
 // MULS/MULU: 16-bit operand1[15:0] signed/unsigned * operand2[15:0] signed/unsigned = 32-bit result signed/unsigned
 // Optimization by Frederic Requin
 wire [33:0] mult_result;
@@ -2754,36 +2677,6 @@ defparam
     muls.lpm_widthp = 34,
     muls.lpm_representation = "SIGNED",
     muls.lpm_pipeline = 1;
-
-/*OPTIM - count LE & MHz in comment in switch
-// MULU: 16-bit operand1[15:0] unsigned * 16-bit operand2 unsigned = 32-bit result unsigned
-lpm_mult mulu_inst(
-    .clock(clock),
-    .dataa(operand1[15:0]),
-    .datab(operand2[15:0]),
-    .result(mulu_result)
-);
-defparam
-    mulu_inst.lpm_widtha = 16,
-    mulu_inst.lpm_widthb = 16,
-    mulu_inst.lpm_widthp = 32,
-    mulu_inst.lpm_representation = "UNSIGNED",
-    mulu_inst.lpm_pipeline = 18;
-
-// MULS: 16-bit operand1[15:0] signed * 16-bit operand2 signed = 32-bit result signed
-lpm_mult muls_inst(
-    .clock(clock),
-    .dataa(operand1[15:0]),
-    .datab(operand2[15:0]),
-    .result(muls_result)
-);
-defparam
-    muls_inst.lpm_widtha = 16,
-    muls_inst.lpm_widthb = 16,
-    muls_inst.lpm_widthp = 32,
-    muls_inst.lpm_representation = "SIGNED",
-    muls_inst.lpm_pipeline = 18;
-*/
 
 // multiplication ready in one cycle, division ready when div_count in waiting or idle state
 assign alu_mult_div_ready = (div_count == 5'd1 || div_count == 5'd0);
@@ -3241,11 +3134,6 @@ always @(posedge clock or negedge reset_n) begin
                 end
                 // division overflow: divu, divs
                 else if(ir[15:12] == 4'b1000 && div_overflow == 1'b1) begin
-                /*OPTIM
-                else if( ((ir[15:12] == 4'b1000 && mult_div_sign == 1'b0) && (divu_quotient[31:16] != 16'd0)) ||
-                         ((ir[15:12] == 4'b1000 && mult_div_sign == 1'b1) && (divs_quotient[31:16] != {16{divs_quotient[15]}}))
-                ) begin
-                */
                     // X not affected
                     // C cleared
                     sr[0] <= 1'b0;
@@ -3332,16 +3220,6 @@ always @(posedge clock or negedge reset_n) begin
                 // NEGX / CLR / NEG / NOT
                 if ((ir[11:8] == 4'b0000) || (ir[11:8] == 4'b0010) || (ir[11:8] == 4'b0100) || (ir[11:8] == 4'b0110))
                     result = 32'b0 - (operand1[31:0] & {32{ir[10] | ~ir[9]}}) - ((sr[4] & ~ir[10] & ~ir[9]) | (ir[10] & ir[9]));
-                /*OPTIM
-                // NEGX
-                if(    ir[11:8] == 4'b0000 ) result = 32'b0 - operand1[31:0] - sr[4];
-                // CLR
-                else if (ir[11:8] == 4'b0010) result = 32'b0;
-                // NEG
-                else if( ir[11:8] == 4'b0100 ) result = 32'b0 - operand1[31:0];
-                // NOT
-                else if( ir[11:8] == 4'b0110 ) result = ~operand1[31:0];
-                */
                 // NBCD
                 else if( ir[11:6] == 6'b1000_00 ) begin
                     

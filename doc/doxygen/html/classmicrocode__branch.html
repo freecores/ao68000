@@ -99,7 +99,7 @@ Signals</h2></td></tr>
 <p>The <a class="el" href="classmicrocode__branch.html" title="Select the next microcode word to execute.">microcode_branch</a> module is responsible for selecting the next microcode word to execute. This decision is based on the value of the current microcode word, the value of the interrupt privilege level, the state of the current bus cycle and other internal signals.</p>
 <p>The <a class="el" href="classmicrocode__branch.html" title="Select the next microcode word to execute.">microcode_branch</a> module implements a simple stack for the microcode addresses. This makes it possible to call subroutines inside the microcode. </p>
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03474">3474</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03352">3352</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 <hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="a5c48a82153e9796a3913029cde0cc182"></a><!-- doxytag: member="microcode_branch::ALWAYS_32" ref="a5c48a82153e9796a3913029cde0cc182" args="clock, reset_n" -->
 <div class="memitem">
@@ -120,12 +120,12 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03557">3557</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03435">3435</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 <div class="fragment"><pre class="fragment"> 
-<a name="l03557"></a>03557 <span class="vhdlkeyword">always</span> @(<span class="vhdlkeyword">posedge</span> <a class="code" href="classmicrocode__branch.html#aa97186c6a6c8f8229219bceb1750b753">clock</a> <span class="vhdlkeyword">or</span> <span class="vhdlkeyword">negedge</span> <a class="code" href="classmicrocode__branch.html#a446d61eb34eb480a38661d473bf25fd4">reset_n</a>) <span class="vhdlkeyword">begin</span>
-<a name="l03558"></a>03558     <span class="vhdlkeyword">if</span>(<a class="code" href="classmicrocode__branch.html#a446d61eb34eb480a38661d473bf25fd4">reset_n</a> == <span class="vhdllogic">1&#39;b0</span>) <a class="code" href="classmicrocode__branch.html#ad9bc2cb9966990b791c16ae418be756c">micro_pc_0</a> &lt;= <span class="vhdllogic">9&#39;d0</span>;
-<a name="l03559"></a>03559     <span class="vhdlkeyword">else</span>                <a class="code" href="classmicrocode__branch.html#ad9bc2cb9966990b791c16ae418be756c">micro_pc_0</a> &lt;= <a class="code" href="classmicrocode__branch.html#a53df336945e1387fada5822142621f2f">micro_pc</a>;
-<a name="l03560"></a>03560 <span class="vhdlkeyword">end</span>
+<a name="l03435"></a>03435 <span class="vhdlkeyword">always</span> @(<span class="vhdlkeyword">posedge</span> <a class="code" href="classmicrocode__branch.html#aa97186c6a6c8f8229219bceb1750b753">clock</a> <span class="vhdlkeyword">or</span> <span class="vhdlkeyword">negedge</span> <a class="code" href="classmicrocode__branch.html#a446d61eb34eb480a38661d473bf25fd4">reset_n</a>) <span class="vhdlkeyword">begin</span>
+<a name="l03436"></a>03436     <span class="vhdlkeyword">if</span>(<a class="code" href="classmicrocode__branch.html#a446d61eb34eb480a38661d473bf25fd4">reset_n</a> == <span class="vhdllogic">1&#39;b0</span>) <a class="code" href="classmicrocode__branch.html#ad9bc2cb9966990b791c16ae418be756c">micro_pc_0</a> &lt;= <span class="vhdllogic">9&#39;d0</span>;
+<a name="l03437"></a>03437     <span class="vhdlkeyword">else</span>                <a class="code" href="classmicrocode__branch.html#ad9bc2cb9966990b791c16ae418be756c">micro_pc_0</a> &lt;= <a class="code" href="classmicrocode__branch.html#a53df336945e1387fada5822142621f2f">micro_pc</a>;
+<a name="l03438"></a>03438 <span class="vhdlkeyword">end</span>
 </pre></div>
 </div>
 </div>
@@ -148,63 +148,63 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03562">3562</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03440">3440</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 <div class="fragment"><pre class="fragment"> 
-<a name="l03562"></a>03562 <span class="vhdlkeyword">always</span> @(<span class="vhdlkeyword">posedge</span> <a class="code" href="classmicrocode__branch.html#aa97186c6a6c8f8229219bceb1750b753">clock</a> <span class="vhdlkeyword">or</span> <span class="vhdlkeyword">negedge</span> <a class="code" href="classmicrocode__branch.html#a446d61eb34eb480a38661d473bf25fd4">reset_n</a>) <span class="vhdlkeyword">begin</span>
-<a name="l03563"></a>03563     <span class="vhdlkeyword">if</span>(<a class="code" href="classmicrocode__branch.html#a446d61eb34eb480a38661d473bf25fd4">reset_n</a> == <span class="vhdllogic">1&#39;b0</span>) <span class="vhdlkeyword">begin</span>
-<a name="l03564"></a>03564         <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a> &lt;= <span class="vhdllogic">9&#39;d0</span>;
-<a name="l03565"></a>03565         <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a> &lt;= <span class="vhdllogic">9&#39;d0</span>;
-<a name="l03566"></a>03566         <a class="code" href="classmicrocode__branch.html#a8d7713b0340f69c7eae6282373e3bf7b">micro_pc_3</a> &lt;= <span class="vhdllogic">9&#39;d0</span>;
-<a name="l03567"></a>03567     <span class="vhdlkeyword">end</span>
-<a name="l03568"></a>03568     <span class="vhdlkeyword">else</span> <span class="vhdlkeyword">if</span>(<a class="code" href="classmicrocode__branch.html#a93f2469a63fd895a2a06d93b58735d41">branch_control</a> == <a class="code" href="ao68000_8v.html#a79ce1f7b2aa4e141d52316a04977ee60">`BRANCH_stop_flag_wait_ir_decode</a><span class="vhdlchar"></span> &amp;&amp; <a class="code" href="classmicrocode__branch.html#ae627b4cdc5e73300a5166eb7636468ea">prefetch_ir_valid</a> == <span class="vhdllogic">1&#39;b1</span> &amp;&amp; <a class="code" href="classmicrocode__branch.html#a96f331edcf8cb8bb65f80139b5248456">decoder_trap</a> == <span class="vhdllogic">8&#39;d0</span>)
-<a name="l03569"></a>03569     <span class="vhdlkeyword">begin</span>
-<a name="l03570"></a>03570         <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a> &lt;= <a class="code" href="classmicrocode__branch.html#ad9bc2cb9966990b791c16ae418be756c">micro_pc_0</a> + { <span class="vhdllogic">5&#39;d0</span>, <a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> };
-<a name="l03571"></a>03571         <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a> &lt;= <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a>;
-<a name="l03572"></a>03572         <a class="code" href="classmicrocode__branch.html#a8d7713b0340f69c7eae6282373e3bf7b">micro_pc_3</a> &lt;= <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a>;
-<a name="l03573"></a>03573     <span class="vhdlkeyword">end</span>
-<a name="l03574"></a>03574     <span class="vhdlkeyword">else</span> <span class="vhdlkeyword">if</span>(<a class="code" href="classmicrocode__branch.html#a93f2469a63fd895a2a06d93b58735d41">branch_control</a> == <a class="code" href="ao68000_8v.html#a1f24f0ad71fd4d2edd6ead5ef6c3056a">`BRANCH_procedure</a><span class="vhdlchar"></span>) <span class="vhdlkeyword">begin</span>
-<a name="l03575"></a>03575         <span class="vhdlkeyword">if</span>(<a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> == <a class="code" href="ao68000_8v.html#a403d3720f31ad5a5895778bee758fb55">`PROCEDURE_call_read</a><span class="vhdlchar"></span> &amp;&amp; <a class="code" href="classmicrocode__branch.html#a029e3e9219332863900f71a52816c7ac">load_ea</a> != <span class="vhdllogic">9&#39;d0</span>) <span class="vhdlkeyword">begin</span>
-<a name="l03576"></a>03576             <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a> &lt;= <a class="code" href="classmicrocode__branch.html#acd130168642a726f7de176682a42e3ad">perform_ea_read</a>;
-<a name="l03577"></a>03577             <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a> &lt;= <a class="code" href="classmicrocode__branch.html#ad9bc2cb9966990b791c16ae418be756c">micro_pc_0</a> + <span class="vhdllogic">9&#39;d1</span>;
-<a name="l03578"></a>03578             <a class="code" href="classmicrocode__branch.html#a8d7713b0340f69c7eae6282373e3bf7b">micro_pc_3</a> &lt;= <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a>;
-<a name="l03579"></a>03579         <span class="vhdlkeyword">end</span>
-<a name="l03580"></a>03580         <span class="vhdlkeyword">else</span> <span class="vhdlkeyword">if</span>(<a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> == <a class="code" href="ao68000_8v.html#a403d3720f31ad5a5895778bee758fb55">`PROCEDURE_call_read</a><span class="vhdlchar"></span> &amp;&amp; <a class="code" href="classmicrocode__branch.html#a029e3e9219332863900f71a52816c7ac">load_ea</a> == <span class="vhdllogic">9&#39;d0</span>) <span class="vhdlkeyword">begin</span>
-<a name="l03581"></a>03581             <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a> &lt;= <a class="code" href="classmicrocode__branch.html#ad9bc2cb9966990b791c16ae418be756c">micro_pc_0</a> + <span class="vhdllogic">9&#39;d1</span>;
-<a name="l03582"></a>03582             <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a> &lt;= <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a>;
-<a name="l03583"></a>03583             <a class="code" href="classmicrocode__branch.html#a8d7713b0340f69c7eae6282373e3bf7b">micro_pc_3</a> &lt;= <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a>;
-<a name="l03584"></a>03584         <span class="vhdlkeyword">end</span>
-<a name="l03585"></a>03585         <span class="vhdlkeyword">else</span> <span class="vhdlkeyword">if</span>(<a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> == <a class="code" href="ao68000_8v.html#a50af2007588b7a528b934ae7672b1214">`PROCEDURE_call_write</a><span class="vhdlchar"></span> &amp;&amp; <a class="code" href="classmicrocode__branch.html#a2bf9f1fb5125818e8eb47aa043e0a393">save_ea</a> != <span class="vhdllogic">9&#39;d0</span>) <span class="vhdlkeyword">begin</span>
-<a name="l03586"></a>03586             <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a> &lt;= <a class="code" href="classmicrocode__branch.html#a2bf9f1fb5125818e8eb47aa043e0a393">save_ea</a>;
-<a name="l03587"></a>03587             <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a> &lt;= <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a>;
-<a name="l03588"></a>03588             <a class="code" href="classmicrocode__branch.html#a8d7713b0340f69c7eae6282373e3bf7b">micro_pc_3</a> &lt;= <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a>;
-<a name="l03589"></a>03589         <span class="vhdlkeyword">end</span>
-<a name="l03590"></a>03590         <span class="vhdlkeyword">else</span> <span class="vhdlkeyword">if</span>((<a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> == <a class="code" href="ao68000_8v.html#a5c7af3686fb890de6242f973de1ee549">`PROCEDURE_call_load_ea</a><span class="vhdlchar"></span> &amp;&amp; <a class="code" href="classmicrocode__branch.html#a029e3e9219332863900f71a52816c7ac">load_ea</a> != <span class="vhdllogic">9&#39;d0</span>) ||
-<a name="l03591"></a>03591                 (<a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> == <a class="code" href="ao68000_8v.html#a698b04745cbbec22896235d5cfffac43">`PROCEDURE_call_perform_ea_read</a><span class="vhdlchar"></span>) ||
-<a name="l03592"></a>03592                 (<a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> == <a class="code" href="ao68000_8v.html#aa98c954da2ac9f709907c8c593b1439e">`PROCEDURE_call_perform_ea_write</a><span class="vhdlchar"></span>) ||
-<a name="l03593"></a>03593                 (<a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> == <a class="code" href="ao68000_8v.html#a30022c5eb1821e27dd5c70d4affbc835">`PROCEDURE_call_save_ea</a><span class="vhdlchar"></span> &amp;&amp; <a class="code" href="classmicrocode__branch.html#a2bf9f1fb5125818e8eb47aa043e0a393">save_ea</a> != <span class="vhdllogic">9&#39;d0</span>) ||
-<a name="l03594"></a>03594                 (<a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> == <a class="code" href="ao68000_8v.html#a2c67cc2747b67d04684855e14c2b9fbb">`PROCEDURE_call_trap</a><span class="vhdlchar"></span>) )
-<a name="l03595"></a>03595         <span class="vhdlkeyword">begin</span>
-<a name="l03596"></a>03596             <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a> &lt;= <a class="code" href="classmicrocode__branch.html#ad9bc2cb9966990b791c16ae418be756c">micro_pc_0</a> + <span class="vhdllogic">9&#39;d1</span>;
-<a name="l03597"></a>03597             <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a> &lt;= <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a>;
-<a name="l03598"></a>03598             <a class="code" href="classmicrocode__branch.html#a8d7713b0340f69c7eae6282373e3bf7b">micro_pc_3</a> &lt;= <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a>;
-<a name="l03599"></a>03599         <span class="vhdlkeyword">end</span>
-<a name="l03600"></a>03600         <span class="vhdlkeyword">else</span> <span class="vhdlkeyword">if</span>(<a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> == <a class="code" href="ao68000_8v.html#af842761d13933777546d76bd997e7494">`PROCEDURE_return</a><span class="vhdlchar"></span>) <span class="vhdlkeyword">begin</span>
-<a name="l03601"></a>03601             <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a> &lt;= <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a>;
-<a name="l03602"></a>03602             <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a> &lt;= <a class="code" href="classmicrocode__branch.html#a8d7713b0340f69c7eae6282373e3bf7b">micro_pc_3</a>;
-<a name="l03603"></a>03603             <a class="code" href="classmicrocode__branch.html#a8d7713b0340f69c7eae6282373e3bf7b">micro_pc_3</a> &lt;= <span class="vhdllogic">9&#39;d0</span>;
-<a name="l03604"></a>03604         <span class="vhdlkeyword">end</span>
-<a name="l03605"></a>03605         <span class="vhdlkeyword">else</span> <span class="vhdlkeyword">if</span>(<a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> == <a class="code" href="ao68000_8v.html#a318a0823db3c0aa8dfeae26f05495e5b">`PROCEDURE_push_micropc</a><span class="vhdlchar"></span>) <span class="vhdlkeyword">begin</span>
-<a name="l03606"></a>03606             <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a> &lt;= <a class="code" href="classmicrocode__branch.html#ad9bc2cb9966990b791c16ae418be756c">micro_pc_0</a>;
-<a name="l03607"></a>03607             <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a> &lt;= <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a>;
-<a name="l03608"></a>03608             <a class="code" href="classmicrocode__branch.html#a8d7713b0340f69c7eae6282373e3bf7b">micro_pc_3</a> &lt;= <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a>;
-<a name="l03609"></a>03609         <span class="vhdlkeyword">end</span>
-<a name="l03610"></a>03610         <span class="vhdlkeyword">else</span> <span class="vhdlkeyword">if</span>(<a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> == <a class="code" href="ao68000_8v.html#acfe58e669e77374120e6e534fc621316">`PROCEDURE_pop_micropc</a><span class="vhdlchar"></span>) <span class="vhdlkeyword">begin</span>
-<a name="l03611"></a>03611             <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a> &lt;= <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a>;
-<a name="l03612"></a>03612             <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a> &lt;= <a class="code" href="classmicrocode__branch.html#a8d7713b0340f69c7eae6282373e3bf7b">micro_pc_3</a>;
-<a name="l03613"></a>03613             <a class="code" href="classmicrocode__branch.html#a8d7713b0340f69c7eae6282373e3bf7b">micro_pc_3</a> &lt;= <span class="vhdllogic">9&#39;d0</span>;
-<a name="l03614"></a>03614         <span class="vhdlkeyword">end</span>
-<a name="l03615"></a>03615     <span class="vhdlkeyword">end</span>
-<a name="l03616"></a>03616 <span class="vhdlkeyword">end</span>
+<a name="l03440"></a>03440 <span class="vhdlkeyword">always</span> @(<span class="vhdlkeyword">posedge</span> <a class="code" href="classmicrocode__branch.html#aa97186c6a6c8f8229219bceb1750b753">clock</a> <span class="vhdlkeyword">or</span> <span class="vhdlkeyword">negedge</span> <a class="code" href="classmicrocode__branch.html#a446d61eb34eb480a38661d473bf25fd4">reset_n</a>) <span class="vhdlkeyword">begin</span>
+<a name="l03441"></a>03441     <span class="vhdlkeyword">if</span>(<a class="code" href="classmicrocode__branch.html#a446d61eb34eb480a38661d473bf25fd4">reset_n</a> == <span class="vhdllogic">1&#39;b0</span>) <span class="vhdlkeyword">begin</span>
+<a name="l03442"></a>03442         <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a> &lt;= <span class="vhdllogic">9&#39;d0</span>;
+<a name="l03443"></a>03443         <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a> &lt;= <span class="vhdllogic">9&#39;d0</span>;
+<a name="l03444"></a>03444         <a class="code" href="classmicrocode__branch.html#a8d7713b0340f69c7eae6282373e3bf7b">micro_pc_3</a> &lt;= <span class="vhdllogic">9&#39;d0</span>;
+<a name="l03445"></a>03445     <span class="vhdlkeyword">end</span>
+<a name="l03446"></a>03446     <span class="vhdlkeyword">else</span> <span class="vhdlkeyword">if</span>(<a class="code" href="classmicrocode__branch.html#a93f2469a63fd895a2a06d93b58735d41">branch_control</a> == <a class="code" href="ao68000_8v.html#a79ce1f7b2aa4e141d52316a04977ee60">`BRANCH_stop_flag_wait_ir_decode</a><span class="vhdlchar"></span> &amp;&amp; <a class="code" href="classmicrocode__branch.html#ae627b4cdc5e73300a5166eb7636468ea">prefetch_ir_valid</a> == <span class="vhdllogic">1&#39;b1</span> &amp;&amp; <a class="code" href="classmicrocode__branch.html#a96f331edcf8cb8bb65f80139b5248456">decoder_trap</a> == <span class="vhdllogic">8&#39;d0</span>)
+<a name="l03447"></a>03447     <span class="vhdlkeyword">begin</span>
+<a name="l03448"></a>03448         <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a> &lt;= <a class="code" href="classmicrocode__branch.html#ad9bc2cb9966990b791c16ae418be756c">micro_pc_0</a> + { <span class="vhdllogic">5&#39;d0</span>, <a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> };
+<a name="l03449"></a>03449         <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a> &lt;= <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a>;
+<a name="l03450"></a>03450         <a class="code" href="classmicrocode__branch.html#a8d7713b0340f69c7eae6282373e3bf7b">micro_pc_3</a> &lt;= <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a>;
+<a name="l03451"></a>03451     <span class="vhdlkeyword">end</span>
+<a name="l03452"></a>03452     <span class="vhdlkeyword">else</span> <span class="vhdlkeyword">if</span>(<a class="code" href="classmicrocode__branch.html#a93f2469a63fd895a2a06d93b58735d41">branch_control</a> == <a class="code" href="ao68000_8v.html#a1f24f0ad71fd4d2edd6ead5ef6c3056a">`BRANCH_procedure</a><span class="vhdlchar"></span>) <span class="vhdlkeyword">begin</span>
+<a name="l03453"></a>03453         <span class="vhdlkeyword">if</span>(<a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> == <a class="code" href="ao68000_8v.html#a403d3720f31ad5a5895778bee758fb55">`PROCEDURE_call_read</a><span class="vhdlchar"></span> &amp;&amp; <a class="code" href="classmicrocode__branch.html#a029e3e9219332863900f71a52816c7ac">load_ea</a> != <span class="vhdllogic">9&#39;d0</span>) <span class="vhdlkeyword">begin</span>
+<a name="l03454"></a>03454             <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a> &lt;= <a class="code" href="classmicrocode__branch.html#acd130168642a726f7de176682a42e3ad">perform_ea_read</a>;
+<a name="l03455"></a>03455             <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a> &lt;= <a class="code" href="classmicrocode__branch.html#ad9bc2cb9966990b791c16ae418be756c">micro_pc_0</a> + <span class="vhdllogic">9&#39;d1</span>;
+<a name="l03456"></a>03456             <a class="code" href="classmicrocode__branch.html#a8d7713b0340f69c7eae6282373e3bf7b">micro_pc_3</a> &lt;= <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a>;
+<a name="l03457"></a>03457         <span class="vhdlkeyword">end</span>
+<a name="l03458"></a>03458         <span class="vhdlkeyword">else</span> <span class="vhdlkeyword">if</span>(<a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> == <a class="code" href="ao68000_8v.html#a403d3720f31ad5a5895778bee758fb55">`PROCEDURE_call_read</a><span class="vhdlchar"></span> &amp;&amp; <a class="code" href="classmicrocode__branch.html#a029e3e9219332863900f71a52816c7ac">load_ea</a> == <span class="vhdllogic">9&#39;d0</span>) <span class="vhdlkeyword">begin</span>
+<a name="l03459"></a>03459             <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a> &lt;= <a class="code" href="classmicrocode__branch.html#ad9bc2cb9966990b791c16ae418be756c">micro_pc_0</a> + <span class="vhdllogic">9&#39;d1</span>;
+<a name="l03460"></a>03460             <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a> &lt;= <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a>;
+<a name="l03461"></a>03461             <a class="code" href="classmicrocode__branch.html#a8d7713b0340f69c7eae6282373e3bf7b">micro_pc_3</a> &lt;= <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a>;
+<a name="l03462"></a>03462         <span class="vhdlkeyword">end</span>
+<a name="l03463"></a>03463         <span class="vhdlkeyword">else</span> <span class="vhdlkeyword">if</span>(<a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> == <a class="code" href="ao68000_8v.html#a50af2007588b7a528b934ae7672b1214">`PROCEDURE_call_write</a><span class="vhdlchar"></span> &amp;&amp; <a class="code" href="classmicrocode__branch.html#a2bf9f1fb5125818e8eb47aa043e0a393">save_ea</a> != <span class="vhdllogic">9&#39;d0</span>) <span class="vhdlkeyword">begin</span>
+<a name="l03464"></a>03464             <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a> &lt;= <a class="code" href="classmicrocode__branch.html#a2bf9f1fb5125818e8eb47aa043e0a393">save_ea</a>;
+<a name="l03465"></a>03465             <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a> &lt;= <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a>;
+<a name="l03466"></a>03466             <a class="code" href="classmicrocode__branch.html#a8d7713b0340f69c7eae6282373e3bf7b">micro_pc_3</a> &lt;= <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a>;
+<a name="l03467"></a>03467         <span class="vhdlkeyword">end</span>
+<a name="l03468"></a>03468         <span class="vhdlkeyword">else</span> <span class="vhdlkeyword">if</span>((<a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> == <a class="code" href="ao68000_8v.html#a5c7af3686fb890de6242f973de1ee549">`PROCEDURE_call_load_ea</a><span class="vhdlchar"></span> &amp;&amp; <a class="code" href="classmicrocode__branch.html#a029e3e9219332863900f71a52816c7ac">load_ea</a> != <span class="vhdllogic">9&#39;d0</span>) ||
+<a name="l03469"></a>03469                 (<a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> == <a class="code" href="ao68000_8v.html#a698b04745cbbec22896235d5cfffac43">`PROCEDURE_call_perform_ea_read</a><span class="vhdlchar"></span>) ||
+<a name="l03470"></a>03470                 (<a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> == <a class="code" href="ao68000_8v.html#aa98c954da2ac9f709907c8c593b1439e">`PROCEDURE_call_perform_ea_write</a><span class="vhdlchar"></span>) ||
+<a name="l03471"></a>03471                 (<a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> == <a class="code" href="ao68000_8v.html#a30022c5eb1821e27dd5c70d4affbc835">`PROCEDURE_call_save_ea</a><span class="vhdlchar"></span> &amp;&amp; <a class="code" href="classmicrocode__branch.html#a2bf9f1fb5125818e8eb47aa043e0a393">save_ea</a> != <span class="vhdllogic">9&#39;d0</span>) ||
+<a name="l03472"></a>03472                 (<a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> == <a class="code" href="ao68000_8v.html#a2c67cc2747b67d04684855e14c2b9fbb">`PROCEDURE_call_trap</a><span class="vhdlchar"></span>) )
+<a name="l03473"></a>03473         <span class="vhdlkeyword">begin</span>
+<a name="l03474"></a>03474             <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a> &lt;= <a class="code" href="classmicrocode__branch.html#ad9bc2cb9966990b791c16ae418be756c">micro_pc_0</a> + <span class="vhdllogic">9&#39;d1</span>;
+<a name="l03475"></a>03475             <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a> &lt;= <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a>;
+<a name="l03476"></a>03476             <a class="code" href="classmicrocode__branch.html#a8d7713b0340f69c7eae6282373e3bf7b">micro_pc_3</a> &lt;= <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a>;
+<a name="l03477"></a>03477         <span class="vhdlkeyword">end</span>
+<a name="l03478"></a>03478         <span class="vhdlkeyword">else</span> <span class="vhdlkeyword">if</span>(<a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> == <a class="code" href="ao68000_8v.html#af842761d13933777546d76bd997e7494">`PROCEDURE_return</a><span class="vhdlchar"></span>) <span class="vhdlkeyword">begin</span>
+<a name="l03479"></a>03479             <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a> &lt;= <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a>;
+<a name="l03480"></a>03480             <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a> &lt;= <a class="code" href="classmicrocode__branch.html#a8d7713b0340f69c7eae6282373e3bf7b">micro_pc_3</a>;
+<a name="l03481"></a>03481             <a class="code" href="classmicrocode__branch.html#a8d7713b0340f69c7eae6282373e3bf7b">micro_pc_3</a> &lt;= <span class="vhdllogic">9&#39;d0</span>;
+<a name="l03482"></a>03482         <span class="vhdlkeyword">end</span>
+<a name="l03483"></a>03483         <span class="vhdlkeyword">else</span> <span class="vhdlkeyword">if</span>(<a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> == <a class="code" href="ao68000_8v.html#a318a0823db3c0aa8dfeae26f05495e5b">`PROCEDURE_push_micropc</a><span class="vhdlchar"></span>) <span class="vhdlkeyword">begin</span>
+<a name="l03484"></a>03484             <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a> &lt;= <a class="code" href="classmicrocode__branch.html#ad9bc2cb9966990b791c16ae418be756c">micro_pc_0</a>;
+<a name="l03485"></a>03485             <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a> &lt;= <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a>;
+<a name="l03486"></a>03486             <a class="code" href="classmicrocode__branch.html#a8d7713b0340f69c7eae6282373e3bf7b">micro_pc_3</a> &lt;= <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a>;
+<a name="l03487"></a>03487         <span class="vhdlkeyword">end</span>
+<a name="l03488"></a>03488         <span class="vhdlkeyword">else</span> <span class="vhdlkeyword">if</span>(<a class="code" href="classmicrocode__branch.html#a4c922f8d1c3da7414164908004c6e60d">branch_offset</a> == <a class="code" href="ao68000_8v.html#acfe58e669e77374120e6e534fc621316">`PROCEDURE_pop_micropc</a><span class="vhdlchar"></span>) <span class="vhdlkeyword">begin</span>
+<a name="l03489"></a>03489             <a class="code" href="classmicrocode__branch.html#a1759008367898c209d99232aaa1dfd6c">micro_pc_1</a> &lt;= <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a>;
+<a name="l03490"></a>03490             <a class="code" href="classmicrocode__branch.html#a5f0609e6f83715642a34d65104c11e47">micro_pc_2</a> &lt;= <a class="code" href="classmicrocode__branch.html#a8d7713b0340f69c7eae6282373e3bf7b">micro_pc_3</a>;
+<a name="l03491"></a>03491             <a class="code" href="classmicrocode__branch.html#a8d7713b0340f69c7eae6282373e3bf7b">micro_pc_3</a> &lt;= <span class="vhdllogic">9&#39;d0</span>;
+<a name="l03492"></a>03492         <span class="vhdlkeyword">end</span>
+<a name="l03493"></a>03493     <span class="vhdlkeyword">end</span>
+<a name="l03494"></a>03494 <span class="vhdlkeyword">end</span>
 </pre></div>
 </div>
 </div>
@@ -220,7 +220,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03475">3475</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03353">3353</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -235,7 +235,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03476">3476</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03354">3354</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -250,7 +250,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03478">3478</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03356">3356</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -265,7 +265,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03479">3479</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03357">3357</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -280,7 +280,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03480">3480</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03358">3358</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -295,7 +295,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03481">3481</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03359">3359</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -310,7 +310,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03482">3482</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03360">3360</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -325,7 +325,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03483">3483</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03361">3361</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -340,7 +340,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03484">3484</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03362">3362</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -355,7 +355,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03485">3485</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03363">3363</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -370,7 +370,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03486">3486</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03364">3364</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -385,7 +385,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03487">3487</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03365">3365</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -400,7 +400,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03488">3488</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03366">3366</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -415,7 +415,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03489">3489</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03367">3367</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -430,7 +430,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03490">3490</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03368">3368</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -445,7 +445,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03491">3491</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03369">3369</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -460,7 +460,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03493">3493</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03371">3371</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -475,7 +475,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03494">3494</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03372">3372</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -490,7 +490,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03495">3495</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03373">3373</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -505,7 +505,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03496">3496</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03374">3374</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -520,7 +520,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03497">3497</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03375">3375</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -535,7 +535,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03499">3499</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03377">3377</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -550,7 +550,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03500">3500</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03378">3378</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -565,7 +565,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03501">3501</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03379">3379</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -580,7 +580,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03502">3502</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03380">3380</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -595,7 +595,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03503">3503</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03381">3381</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -610,7 +610,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03505">3505</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03383">3383</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -625,7 +625,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03506">3506</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03384">3384</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -640,7 +640,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03507">3507</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03385">3385</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -655,7 +655,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03510">3510</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03388">3388</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -670,7 +670,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03511">3511</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03389">3389</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -685,7 +685,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03512">3512</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03390">3390</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -700,7 +700,7 @@ Signals</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03513">3513</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
+<p>Definition at line <a class="el" href="ao68000_8v_source.html#l03391">3391</a> of file <a class="el" href="ao68000_8v_source.html">ao68000.v</a>.</p>
 
 </div>
 </div>
@@ -708,7 +708,7 @@ Signals</h2></td></tr>
 <li><a class="el" href="ao68000_8v_source.html">ao68000.v</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 15 2011 16:45:29 for ao68000 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 15 2011 16:54:37 for ao68000 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
 </body>
