@@ -945,7 +945,7 @@ public class Microcode {
 
         p       .ALU_CHK();
 
-        p       .BRANCH_special_01().offset("chk_no_trap");
+        p       .BRANCH_alu_signal().offset("chk_no_trap");
         p               .TRAP_CHK()
                         .BRANCH_procedure().PROCEDURE_call_trap();
                         // after return continue
@@ -967,10 +967,9 @@ public class Microcode {
 
         p       .BRANCH_procedure().PROCEDURE_call_perform_ea_read();
 
-        p       .ALU_MULS_MULU_DIVS_DIVU()
-                .MOVEM_LOOP_LOAD_0();
+        p       .ALU_MULS_MULU_DIVS_DIVU();
 
-        p       .BRANCH_special_01().offset("div_no_div_by_zero_trap");
+        p       .BRANCH_alu_signal().offset("div_no_div_by_zero_trap");
         p               .TRAP_DIV_BY_ZERO()
                         .BRANCH_procedure().PROCEDURE_call_trap();
                         // return after return
@@ -982,37 +981,22 @@ public class Microcode {
                 // push current micro pc on stack
         p       .BRANCH_procedure().PROCEDURE_push_micropc();
 
-                 // check if loop finished
-        p       .BRANCH_movem_loop().offset("mult_div_loop_0");
-        p               .MOVEM_LOOP_INCR_BY_1()
-                        .BRANCH_procedure().PROCEDURE_return();
+                 // check if operation finished
+        p       .BRANCH_alu_mult_div_ready().offset("mult_div_loop");
+        p               .BRANCH_procedure().PROCEDURE_return();
 
                 // jump here after first loop finished
-        p       .label("mult_div_loop_0");
-
-        p       .BRANCH_procedure().PROCEDURE_pop_micropc()
-                .MOVEM_LOOP_LOAD_0();
-
-                // push current micro pc on stack
-        p       .BRANCH_procedure().PROCEDURE_push_micropc();
-
-                 // check if loop finished
-        p       .BRANCH_movem_loop().offset("mult_div_loop_1");
-        p               .MOVEM_LOOP_INCR_BY_1()
-                        .BRANCH_procedure().PROCEDURE_return();
-
-                // jump here after second loop finished
-        p       .label("mult_div_loop_1");
+        p       .label("mult_div_loop");
 
         p       .ALU_MULS_MULU_DIVS_DIVU()
                 .BRANCH_procedure().PROCEDURE_pop_micropc();
 
-        p       .BRANCH_special_10().offset("mult_div_overflow");
-        p               .BRANCH_procedure().PROCEDURE_call_perform_ea_write();
+        p       .BRANCH_alu_signal().offset("mult_div_no_overflow");
+        p           .BRANCH_procedure().PROCEDURE_return();
 
                 // jump here if overflow
-        p       .label("mult_div_overflow");
-
+        p       .label("mult_div_no_overflow");
+        p       .BRANCH_procedure().PROCEDURE_call_perform_ea_write();
         p       .BRANCH_procedure().PROCEDURE_return();
         
         p.label("MICROPC_MOVEQ");

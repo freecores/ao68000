@@ -4,6 +4,7 @@ help:
 	@echo -e "Available operations:"
 	@echo -e "doxygen             - run the doxygen tool on the ao68000 project."
 	@echo -e "                      Doxverilog version required."
+	@echo -e "microcode           - generate ao68000 microcode from Java sources."
 	@echo -e "spec_extract        - generate the specification.odt file from the Doxygen HTML docs."
 	@echo -e "soc_for_linux       - synthesise soc_for_linux SoC with ao68000 processor for"
 	@echo -e "                      the Terasic DE2-70 board."
@@ -84,10 +85,10 @@ endif
 	cd ./tmp/compare_with_winuae/verilog && iverilog -y. -y./../../../rtl -y./../../../tests/compare_with_winuae/verilog -o tb_ao68000 ./../../../tests/compare_with_winuae/verilog/tb_ao68000.v
 	cp ./rtl/ao68000_microcode.mif ./tmp/compare_with_winuae/verilog
 
-START_IR_DEC 	:= 0
-END_IR_DEC 	:= 65536
+START_IR_DEC 	:= 32960
+END_IR_DEC 	:= 36864
 TERM_PROGRAM 	:= xterm
-COUNT 		:= 2
+COUNT 		:= 4
 COUNT_LIST 	:= $(wordlist 1,$(COUNT),0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19)
 STEP 		:= `expr \( $(END_IR_DEC) - $(START_IR_DEC) \) / $(COUNT)`
 
@@ -101,8 +102,8 @@ compare_with_winuae: ao68000_tool winuae tb_ao68000
 	$(foreach i,$(COUNT_LIST), $(TERM_PROGRAM) -e java -cp ./tmp ao68000_tool.Main test \
 		./tmp/compare_with_winuae/winuae/ao \
 		./tmp/compare_with_winuae/run_$(i)/run.sh \
-		`expr $(i) \* \( \( $(END_IR_DEC) - $(START_IR_DEC) \) / $(COUNT) \)` \
-		`expr \( $(i) + 1 \) \* \( \( $(END_IR_DEC) - $(START_IR_DEC) \) / $(COUNT) \)` \
+		`expr $(START_IR_DEC) + $(i) \* \( \( $(END_IR_DEC) - $(START_IR_DEC) \) / $(COUNT) \)` \
+		`expr $(START_IR_DEC) + \( $(i) + 1 \) \* \( \( $(END_IR_DEC) - $(START_IR_DEC) \) / $(COUNT) \)` \
 		& \
 	)
 

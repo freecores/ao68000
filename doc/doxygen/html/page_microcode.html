@@ -976,7 +976,7 @@
 
         p       .ALU_CHK();
 
-        p       .BRANCH_special_01().offset(<span class="stringliteral">&quot;chk_no_trap&quot;</span>);
+        p       .BRANCH_alu_signal().offset(<span class="stringliteral">&quot;chk_no_trap&quot;</span>);
         p               .TRAP_CHK()
                         .BRANCH_procedure().PROCEDURE_call_trap();
                         <span class="comment">// after return continue</span>
@@ -998,10 +998,9 @@
 
         p       .BRANCH_procedure().PROCEDURE_call_perform_ea_read();
 
-        p       .ALU_MULS_MULU_DIVS_DIVU()
-                .MOVEM_LOOP_LOAD_0();
+        p       .ALU_MULS_MULU_DIVS_DIVU();
 
-        p       .BRANCH_special_01().offset(<span class="stringliteral">&quot;div_no_div_by_zero_trap&quot;</span>);
+        p       .BRANCH_alu_signal().offset(<span class="stringliteral">&quot;div_no_div_by_zero_trap&quot;</span>);
         p               .TRAP_DIV_BY_ZERO()
                         .BRANCH_procedure().PROCEDURE_call_trap();
                         <span class="comment">// return after return</span>
@@ -1013,37 +1012,22 @@
                 <span class="comment">// push current micro pc on stack</span>
         p       .BRANCH_procedure().PROCEDURE_push_micropc();
 
-                 <span class="comment">// check if loop finished</span>
-        p       .BRANCH_movem_loop().offset(<span class="stringliteral">&quot;mult_div_loop_0&quot;</span>);
-        p               .MOVEM_LOOP_INCR_BY_1()
-                        .BRANCH_procedure().PROCEDURE_return();
+                 <span class="comment">// check if operation finished</span>
+        p       .BRANCH_alu_mult_div_ready().offset(<span class="stringliteral">&quot;mult_div_loop&quot;</span>);
+        p               .BRANCH_procedure().PROCEDURE_return();
 
                 <span class="comment">// jump here after first loop finished</span>
-        p       .label(<span class="stringliteral">&quot;mult_div_loop_0&quot;</span>);
-
-        p       .BRANCH_procedure().PROCEDURE_pop_micropc()
-                .MOVEM_LOOP_LOAD_0();
-
-                <span class="comment">// push current micro pc on stack</span>
-        p       .BRANCH_procedure().PROCEDURE_push_micropc();
-
-                 <span class="comment">// check if loop finished</span>
-        p       .BRANCH_movem_loop().offset(<span class="stringliteral">&quot;mult_div_loop_1&quot;</span>);
-        p               .MOVEM_LOOP_INCR_BY_1()
-                        .BRANCH_procedure().PROCEDURE_return();
-
-                <span class="comment">// jump here after second loop finished</span>
-        p       .label(<span class="stringliteral">&quot;mult_div_loop_1&quot;</span>);
+        p       .label(<span class="stringliteral">&quot;mult_div_loop&quot;</span>);
 
         p       .ALU_MULS_MULU_DIVS_DIVU()
                 .BRANCH_procedure().PROCEDURE_pop_micropc();
 
-        p       .BRANCH_special_10().offset(<span class="stringliteral">&quot;mult_div_overflow&quot;</span>);
-        p               .BRANCH_procedure().PROCEDURE_call_perform_ea_write();
+        p       .BRANCH_alu_signal().offset(<span class="stringliteral">&quot;mult_div_no_overflow&quot;</span>);
+        p           .BRANCH_procedure().PROCEDURE_return();
 
                 <span class="comment">// jump here if overflow</span>
-        p       .label(<span class="stringliteral">&quot;mult_div_overflow&quot;</span>);
-
+        p       .label(<span class="stringliteral">&quot;mult_div_no_overflow&quot;</span>);
+        p       .BRANCH_procedure().PROCEDURE_call_perform_ea_write();
         p       .BRANCH_procedure().PROCEDURE_return();
         
         p.label(<span class="stringliteral">&quot;MICROPC_MOVEQ&quot;</span>);
@@ -1567,7 +1551,7 @@
     }
 }
 </pre></div> </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sat Dec 11 2010 13:21:13 for ao68000 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 15 2011 16:45:29 for ao68000 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
 </body>

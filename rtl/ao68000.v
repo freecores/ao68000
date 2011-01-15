@@ -130,7 +130,7 @@
 `define PC_FROM_RESULT                                      3'd1    // move from result
 `define PC_INCR_BY_2                                        3'd2    // increment by 2
 `define PC_INCR_BY_4                                        3'd3    // increment by 4
-`define PC_INCR_BY_SIZE                                     3'd4    // increment by size: 2 (size == 2'b00 || size == 2'b01), 4 (size == 2'b10)
+`define PC_INCR_BY_SIZE                                     3'd4    // increment by size: 2 (size == 3'b001 || size == 3'b010), 4 (size == 3'b100)
 `define PC_FROM_PREFETCH_IR                                 3'd5    // move from prefetch_ir
 `define PC_INCR_BY_2_IN_MAIN_LOOP                           3'd6    // increment by 2, in main loop, when valid prefetch and valid instruction
 
@@ -245,8 +245,8 @@
 `define BRANCH_movem_loop                                   4'd1    // BRANCH(movem_loop == 4'b1000)
 `define BRANCH_movem_reg                                    4'd2    // BRANCH(movem_reg[0] == 0)
 `define BRANCH_operand2                                     4'd3    // BRANCH(operand2[5:0] == 6'b0)
-`define BRANCH_special_01                                   4'd4    // BRANCH(special != 2'b01)
-`define BRANCH_special_10                                   4'd5    // BRANCH(special == 2'b10)
+`define BRANCH_alu_signal                                   4'd4    // BRANCH(alu_signal == 1'b0)
+`define BRANCH_alu_mult_div_ready                           4'd5    // BRANCH(alu_mult_div_ready == 1'b1)
 `define BRANCH_condition_0                                  4'd6    // BRANCH(condition == 1'b0)
 `define BRANCH_condition_1                                  4'd7    // BRANCH(condition == 1'b1)
 `define BRANCH_result                                       4'd8    // BRANCH(result[15:0] == 16'hFFFF)
@@ -316,76 +316,76 @@
 `define MICRO_DATA_procedure                                                         micro_data[87:84]
 
 `define MICROPC_MOVE                                                                 9'd231
-`define MICROPC_MOVE_USP_to_An                                                       9'd403
-`define MICROPC_TAS                                                                  9'd335
-`define MICROPC_BSR                                                                  9'd433
+`define MICROPC_MOVE_USP_to_An                                                       9'd400
+`define MICROPC_TAS                                                                  9'd332
+`define MICROPC_BSR                                                                  9'd430
 `define MICROPC_ADDRESS_BUS_TRAP                                                     9'd3
 `define MICROPC_MOVEP_register_to_memory                                             9'd106
-`define MICROPC_NEGX_CLR_NEG_NOT_NBCD                                                9'd340
-`define MICROPC_RTS                                                                  9'd474
+`define MICROPC_NEGX_CLR_NEG_NOT_NBCD                                                9'd337
+`define MICROPC_RTS                                                                  9'd471
 `define MICROPC_MAIN_LOOP                                                            9'd53
 `define MICROPC_ADDA_SUBA                                                            9'd268
-`define MICROPC_MOVE_TO_CCR_MOVE_TO_SR                                               9'd394
-`define MICROPC_MOVE_FROM_SR                                                         9'd391
+`define MICROPC_MOVE_TO_CCR_MOVE_TO_SR                                               9'd391
+`define MICROPC_MOVE_FROM_SR                                                         9'd388
 `define MICROPC_LOAD_EA_d8_PC_Xn                                                     9'd79
 `define MICROPC_TRAP_ENTRY                                                           9'd35
 `define MICROPC_PERFORM_EA_READ_memory                                               9'd89
-`define MICROPC_RESET                                                                9'd488
+`define MICROPC_RESET                                                                9'd485
 `define MICROPC_PERFORM_EA_WRITE_Dn                                                  9'd91
 `define MICROPC_ASL_LSL_ROL_ROXL_ASR_LSR_ROR_ROXR_all_memory                         9'd225
 `define MICROPC_MOVEA                                                                9'd239
-`define MICROPC_TST                                                                  9'd347
-`define MICROPC_BTST_register                                                        9'd329
+`define MICROPC_TST                                                                  9'd344
+`define MICROPC_BTST_register                                                        9'd326
 `define MICROPC_LOAD_EA_d8_An_Xn                                                     9'd68
 `define MICROPC_MULS_MULU_DIVS_DIVU                                                  9'd290
-`define MICROPC_MOVEQ                                                                9'd310
+`define MICROPC_MOVEQ                                                                9'd307
 `define MICROPC_CMPA                                                                 9'd275
 `define MICROPC_EOR                                                                  9'd245
 `define MICROPC_LOAD_EA_xxx_W                                                        9'd72
-`define MICROPC_DBcc                                                                 9'd377
+`define MICROPC_DBcc                                                                 9'd374
 `define MICROPC_CMPI                                                                 9'd184
 `define MICROPC_LOAD_EA_xxx_L                                                        9'd74
 `define MICROPC_CMPM                                                                 9'd205
-`define MICROPC_MOVE_USP_to_USP                                                      9'd398
-`define MICROPC_ADDQ_SUBQ_not_An                                                     9'd351
-`define MICROPC_ULNK                                                                 9'd422
+`define MICROPC_MOVE_USP_to_USP                                                      9'd395
+`define MICROPC_ADDQ_SUBQ_not_An                                                     9'd348
+`define MICROPC_ULNK                                                                 9'd419
 `define MICROPC_EXG                                                                  9'd197
 `define MICROPC_ADD_to_mem_SUB_to_mem_AND_to_mem_OR_to_mem                           9'd250
-`define MICROPC_Bcc_BRA                                                              9'd365
+`define MICROPC_Bcc_BRA                                                              9'd362
 `define MICROPC_PERFORM_EA_READ_An                                                   9'd86
 `define MICROPC_LOAD_EA_d16_PC                                                       9'd76
-`define MICROPC_NOP                                                                  9'd482
+`define MICROPC_NOP                                                                  9'd479
 `define MICROPC_MOVEM_register_to_memory_predecrement                                9'd131
-`define MICROPC_RTE_RTR                                                              9'd462
-`define MICROPC_TRAP                                                                 9'd483
-`define MICROPC_ADDQ_SUBQ_An                                                         9'd354
+`define MICROPC_RTE_RTR                                                              9'd459
+`define MICROPC_TRAP                                                                 9'd480
+`define MICROPC_ADDQ_SUBQ_An                                                         9'd351
 `define MICROPC_MOVEM_register_to_memory_control                                     9'd147
-`define MICROPC_BTST_immediate                                                       9'd318
+`define MICROPC_BTST_immediate                                                       9'd315
 `define MICROPC_MOVEP_memory_to_register                                             9'd98
 `define MICROPC_PERFORM_EA_WRITE_An                                                  9'd92
 `define MICROPC_CHK                                                                  9'd281
-`define MICROPC_Scc                                                                  9'd358
-`define MICROPC_JMP                                                                  9'd445
+`define MICROPC_Scc                                                                  9'd355
+`define MICROPC_JMP                                                                  9'd442
 `define MICROPC_PEA                                                                  9'd168
 `define MICROPC_SAVE_EA_minus_An                                                     9'd97
 `define MICROPC_ANDI_EORI_ORI_ADDI_SUBI                                              9'd174
-`define MICROPC_BCHG_BCLR_BSET_immediate                                             9'd313
+`define MICROPC_BCHG_BCLR_BSET_immediate                                             9'd310
 `define MICROPC_LOAD_EA_An                                                           9'd62
 `define MICROPC_PERFORM_EA_READ_imm                                                  9'd87
 `define MICROPC_ADD_to_Dn_SUB_to_Dn_AND_to_Dn_OR_to_Dn                               9'd255
 `define MICROPC_LEA                                                                  9'd162
-`define MICROPC_TRAPV                                                                9'd485
-`define MICROPC_LINK                                                                 9'd406
+`define MICROPC_TRAPV                                                                9'd482
+`define MICROPC_LINK                                                                 9'd403
 `define MICROPC_ABCD_SBCD_ADDX_SUBX                                                  9'd189
-`define MICROPC_BCHG_BCLR_BSET_register                                              9'd324
+`define MICROPC_BCHG_BCLR_BSET_register                                              9'd321
 `define MICROPC_PERFORM_EA_READ_Dn                                                   9'd85
 `define MICROPC_LOAD_EA_illegal_command                                              9'd83
 `define MICROPC_ORI_to_CCR_ORI_to_SR_ANDI_to_CCR_ANDI_to_SR_EORI_to_CCR_EORI_to_SR   9'd178
 `define MICROPC_CMP                                                                  9'd262
-`define MICROPC_SWAP_EXT                                                             9'd343
-`define MICROPC_STOP                                                                 9'd491
+`define MICROPC_SWAP_EXT                                                             9'd340
+`define MICROPC_STOP                                                                 9'd488
 `define MICROPC_PERFORM_EA_WRITE_memory                                              9'd93
-`define MICROPC_JSR                                                                  9'd453
+`define MICROPC_JSR                                                                  9'd450
 `define MICROPC_LOAD_EA_minus_An                                                     9'd63
 `define MICROPC_ASL_LSL_ROL_ROXL_ASR_LSR_ROR_ROXR_all_immediate_register             9'd212
 `define MICROPC_SAVE_EA_An_plus                                                      9'd95
@@ -443,7 +443,7 @@ module ao68000 (
 );
 
 wire [15:0] sr;
-wire [1:0]  size;
+wire [2:0]  size;
 wire [31:0] address;
 wire        address_type;
 wire        read_modify_write_flag;
@@ -474,7 +474,8 @@ wire [31:0] An_input;
 wire [2:0]  Dn_address;
 wire [15:0] ir;
 wire [8:0]  decoder_micropc;
-wire [1:0]  special;
+wire        alu_signal;
+wire        alu_mult_div_ready;
 wire [8:0]  load_ea;
 wire [8:0]  perform_ea_read;
 wire [8:0]  perform_ea_write;
@@ -682,7 +683,8 @@ alu alu_m(
     .alu_control        (`MICRO_DATA_alu),
     .sr                 (sr),
     .result             (result),
-    .special            (special)
+    .alu_signal         (alu_signal),
+    .alu_mult_div_ready (alu_mult_div_ready)
 );
 
 microcode_branch microcode_branch_m(
@@ -691,7 +693,8 @@ microcode_branch microcode_branch_m(
     .movem_loop             (movem_loop),
     .movem_reg              (movem_reg),
     .operand2               (operand2),
-    .special                (special),
+    .alu_signal             (alu_signal),
+    .alu_mult_div_ready     (alu_mult_div_ready),
     .condition              (condition),
     .result                 (result),
     .overflow               (sr[1]),
@@ -783,7 +786,7 @@ module bus_control(
     //******************************************* internal
     input supervisor_i,
     input [2:0] ipm_i,
-    input [1:0] size_i,
+    input [2:0] size_i,
     input [31:0] address_i,
     input address_type_i,
     input read_modify_write_i,
@@ -952,7 +955,7 @@ always @(posedge CLK_I or negedge reset_n) begin
                     if(supervisor_i == 1'b1)    fc_o <= (address_type_i == 1'b0) ? FC_SUPERVISOR_DATA : FC_SUPERVISOR_PROGRAM;
                     else                        fc_o <= (address_type_i == 1'b0) ? FC_USER_DATA : FC_USER_PROGRAM;
 
-                    if(address_i[0] == 1'b1 && (size_i == 2'b01 || size_i == 2'b10)) begin
+                    if(address_i[0] == 1'b1 && (size_i[0] == 1'b0)) begin // WORD or LONG WORD
                         fault_address_state_o <= address_i;
                         rw_state_o <= 1'b1;
                         fc_state_o <= (supervisor_i == 1'b1) ?  ((address_type_i == 1'b0) ? FC_SUPERVISOR_DATA : FC_SUPERVISOR_PROGRAM) :
@@ -965,13 +968,13 @@ always @(posedge CLK_I or negedge reset_n) begin
                     else begin
                         CYC_O <= 1'b1;
                         ADR_O <= address_i[31:2];
-                        SEL_O <=    (size_i == 2'b00 && address_i[1:0] == 2'b00)?                   4'b1000 :
-                                    (size_i == 2'b00 && address_i[1:0] == 2'b01)?                   4'b0100 :
-                                    (size_i == 2'b00 && address_i[1:0] == 2'b10)?                   4'b0010 :
-                                    (size_i == 2'b00 && address_i[1:0] == 2'b11)?                   4'b0001 :
-                                    (size_i == 2'b01 && address_i[1] == 2'b0)?                      4'b1100 :
-                                    ((size_i == 2'b01 || size_i == 2'b10) && address_i[1] == 2'b1)? 4'b0011 :
-                                                                                                    4'b1111;
+                        SEL_O <=    (size_i[0] == 1'b1 && address_i[1:0] == 2'b00)? 4'b1000 :
+                                    (size_i[0] == 1'b1 && address_i[1:0] == 2'b01)? 4'b0100 :
+                                    (size_i[0] == 1'b1 && address_i[1:0] == 2'b10)? 4'b0010 :
+                                    (size_i[0] == 1'b1 && address_i[1:0] == 2'b11)? 4'b0001 :
+                                    (size_i[1] == 1'b1 && address_i[1] == 2'b0)?    4'b1100 :
+                                    (size_i[0] == 1'b0 && address_i[1] == 2'b1)?    4'b0011 :
+                                                                                    4'b1111;
                         STB_O <= 1'b1;
 
                         if(read_modify_write_i == 1'b1) begin
@@ -980,7 +983,7 @@ always @(posedge CLK_I or negedge reset_n) begin
                             RMW_O <= 1'b1;
                             CTI_O <= CTI_END_OF_BURST;
                         end
-                        else if(address_i[1:0] == 2'b10 && size_i == 2'b10) begin
+                        else if(address_i[1:0] == 2'b10 && size_i[2] == 1'b1) begin
                             SGL_O <= 1'b0;
                             BLK_O <= 1'b1;
                             RMW_O <= 1'b0;
@@ -1002,7 +1005,7 @@ always @(posedge CLK_I or negedge reset_n) begin
                     if(supervisor_i == 1'b1)    fc_o <= FC_SUPERVISOR_DATA;
                     else                        fc_o <= FC_USER_DATA;
 
-                    if(address_i[0] == 1'b1 && (size_i == 2'b01 || size_i == 2'b10)) begin
+                    if(address_i[0] == 1'b1 && size_i[0] == 1'b0) begin // WORD or LONG WORD
                         fault_address_state_o <= address_i;
                         rw_state_o <= 1'b0;
                         fc_state_o <= (supervisor_i == 1'b1) ? FC_SUPERVISOR_DATA : FC_USER_DATA;
@@ -1016,35 +1019,35 @@ always @(posedge CLK_I or negedge reset_n) begin
                         ADR_O <= address_i[31:2];
                         STB_O <= 1'b1;
 
-                        if(address_i[1:0] == 2'b10 && size_i == 2'b10) begin
+                        if(address_i[1:0] == 2'b10 && size_i[2] == 1'b1) begin
                             DAT_O <= { 16'b0, data_write_i[31:16] };
                             SEL_O <= 4'b0011;
                         end
-                        else if(address_i[1:0] == 2'b00 && size_i == 2'b10) begin
+                        else if(address_i[1:0] == 2'b00 && size_i[2] == 1'b1) begin
                             DAT_O <= data_write_i[31:0];
                             SEL_O <= 4'b1111;
                         end
-                        else if(address_i[1:0] == 2'b10 && size_i == 2'b01) begin
+                        else if(address_i[1:0] == 2'b10 && size_i[1] == 1'b1) begin
                             DAT_O <= { 16'b0, data_write_i[15:0] };
                             SEL_O <= 4'b0011;
                         end
-                        else if(address_i[1:0] == 2'b00 && size_i == 2'b01) begin
+                        else if(address_i[1:0] == 2'b00 && size_i[1] == 1'b1) begin
                             DAT_O <= { data_write_i[15:0], 16'b0 };
                             SEL_O <= 4'b1100;
                         end
-                        else if(address_i[1:0] == 2'b11 && size_i == 2'b00) begin
+                        else if(address_i[1:0] == 2'b11 && size_i[0] == 1'b1) begin
                             DAT_O <= { 24'b0, data_write_i[7:0] };
                             SEL_O <= 4'b0001;
                         end
-                        else if(address_i[1:0] == 2'b10 && size_i == 2'b00) begin
+                        else if(address_i[1:0] == 2'b10 && size_i[0] == 1'b1) begin
                             DAT_O <= { 16'b0, data_write_i[7:0], 8'b0 };
                             SEL_O <= 4'b0010;
                         end
-                        else if(address_i[1:0] == 2'b01 && size_i == 2'b00) begin
+                        else if(address_i[1:0] == 2'b01 && size_i[0] == 1'b1) begin
                             DAT_O <= { 8'b0, data_write_i[7:0], 16'b0 };
                             SEL_O <= 4'b0100;
                         end
-                        else if(address_i[1:0] == 2'b00 && size_i == 2'b00) begin
+                        else if(address_i[1:0] == 2'b00 && size_i[0] == 1'b1) begin
                             DAT_O <= { data_write_i[7:0], 24'b0 };
                             SEL_O <= 4'b1000;
                         end
@@ -1055,7 +1058,7 @@ always @(posedge CLK_I or negedge reset_n) begin
                             RMW_O <= 1'b1;
                             CTI_O <= CTI_END_OF_BURST;
                         end
-                        else if(address_i[1:0] == 2'b10 && size_i == 2'b10) begin
+                        else if(address_i[1:0] == 2'b10 && size_i[2] == 1'b1) begin
                             SGL_O <= 1'b0;
                             BLK_O <= 1'b1;
                             RMW_O <= 1'b0;
@@ -1398,7 +1401,7 @@ always @(posedge CLK_I or negedge reset_n) begin
             //*******************
             S_READ_1: begin
                 if(ACK_I == 1'b1) begin
-                    if(address_i[1:0] == 2'b10 && size_i == 2'b10) begin
+                    if(address_i[1:0] == 2'b10 && size_i[2] == 1'b1) begin
                         //CYC_O <= 1'b1;
                         ADR_O <= address_i_plus_4[31:2];
                         SEL_O <= 4'b1100;
@@ -1427,13 +1430,13 @@ always @(posedge CLK_I or negedge reset_n) begin
                             STB_O <= 1'b0;
                         end
 
-                        if(address_i[1:0] == 2'b00 && size_i == 2'b10)            data_read_o <= DAT_I[31:0];
-                        else if(address_i[1:0] == 2'b10 && size_i == 2'b01)        data_read_o <= { {16{DAT_I[15]}}, DAT_I[15:0] };
-                        else if(address_i[1:0] == 2'b00 && size_i == 2'b01)        data_read_o <= { {16{DAT_I[31]}}, DAT_I[31:16] };
-                        else if(address_i[1:0] == 2'b11 && size_i == 2'b00)        data_read_o <= { {24{DAT_I[7]}}, DAT_I[7:0] };
-                        else if(address_i[1:0] == 2'b10 && size_i == 2'b00)        data_read_o <= { {24{DAT_I[15]}}, DAT_I[15:8] };
-                        else if(address_i[1:0] == 2'b01 && size_i == 2'b00)        data_read_o <= { {24{DAT_I[23]}}, DAT_I[23:16] };
-                        else if(address_i[1:0] == 2'b00 && size_i == 2'b00)        data_read_o <= { {24{DAT_I[31]}}, DAT_I[31:24] };
+                        if(address_i[1:0] == 2'b00 && size_i[2] == 1'b1)             data_read_o <= DAT_I[31:0];
+                        else if(address_i[1:0] == 2'b10 && size_i[1] == 1'b1)        data_read_o <= { {16{DAT_I[15]}}, DAT_I[15:0] };
+                        else if(address_i[1:0] == 2'b00 && size_i[1] == 1'b1)        data_read_o <= { {16{DAT_I[31]}}, DAT_I[31:16] };
+                        else if(address_i[1:0] == 2'b11 && size_i[0] == 1'b1)        data_read_o <= { {24{DAT_I[7]}}, DAT_I[7:0] };
+                        else if(address_i[1:0] == 2'b10 && size_i[0] == 1'b1)        data_read_o <= { {24{DAT_I[15]}}, DAT_I[15:8] };
+                        else if(address_i[1:0] == 2'b01 && size_i[0] == 1'b1)        data_read_o <= { {24{DAT_I[23]}}, DAT_I[23:16] };
+                        else if(address_i[1:0] == 2'b00 && size_i[0] == 1'b1)        data_read_o <= { {24{DAT_I[31]}}, DAT_I[31:24] };
 
                         finished_o <= 1'b1;
                         current_state <= S_WAIT;
@@ -1510,7 +1513,7 @@ always @(posedge CLK_I or negedge reset_n) begin
             //**********************
             S_WRITE_1: begin
                 if(ACK_I == 1'b1) begin
-                    if(address_i[1:0] == 2'b10 && size_i == 2'b10) begin
+                    if(address_i[1:0] == 2'b10 && size_i[2] == 1'b1) begin
                         //CYC_O <= 1'b1;
                         ADR_O <= address_i_plus_4[31:2];
                         //STB_O <= 1'b1;
@@ -1656,7 +1659,7 @@ module registers(
     output reg address_type,
     input [3:0] address_control,
 
-    output reg [1:0] size,
+    output reg [2:0] size,
     input [3:0] size_control,
 
     output reg [5:0] movem_modreg,
@@ -1740,7 +1743,7 @@ always @(posedge clock or negedge reset_n) begin
         if(pc_control == `PC_FROM_RESULT)                       pc = result;
         else if(pc_control == `PC_INCR_BY_2)                    pc = pc + 32'd2;
         else if(pc_control == `PC_INCR_BY_4)                    pc = pc + 32'd4;
-        else if(pc_control == `PC_INCR_BY_SIZE)                 pc = (size == 2'b00 || size == 2'b01) ? pc + 32'd2 : pc + 32'd4;
+        else if(pc_control == `PC_INCR_BY_SIZE)                 pc = (size[2] == 1'b0) ? pc + 32'd2 : pc + 32'd4;
         else if(pc_control == `PC_FROM_PREFETCH_IR)             pc = prefetch_ir[47:16];
         else if(pc_control == `PC_INCR_BY_2_IN_MAIN_LOOP && prefetch_ir_valid == 1'b1 && decoder_trap == 8'd0 && stop_flag == 1'b0)
                                                                 pc = pc + 32'd2;
@@ -1751,15 +1754,43 @@ end
 assign pc_change =
     (    pc_control == `PC_FROM_RESULT || pc_control == `PC_FROM_PREFETCH_IR
     ) ? 2'b11 :
-    (    pc_control == `PC_INCR_BY_4 || (pc_control == `PC_INCR_BY_SIZE && size == 2'b10)
+    (    pc_control == `PC_INCR_BY_4 || (pc_control == `PC_INCR_BY_SIZE && size[2] == 1'b1)
     ) ? 2'b10 :
-    (    pc_control == `PC_INCR_BY_2 || (pc_control == `PC_INCR_BY_SIZE && (size == 2'b00 || size == 2'b01)) ||
+    (    pc_control == `PC_INCR_BY_2 || (pc_control == `PC_INCR_BY_SIZE && size[2] == 1'b0) ||
         (pc_control == `PC_INCR_BY_2_IN_MAIN_LOOP && prefetch_ir_valid == 1'b1 && decoder_trap == 8'd0 && stop_flag == 1'b0)
     ) ? 2'b01 :
     2'b00;
 
 always @(posedge clock or negedge reset_n) begin
-    if(reset_n == 1'b0)                                         size <= 2'b00;
+    if(reset_n == 1'b0) begin
+        size <= 2'b00;
+    end
+    else begin
+        // BYTE
+        size[0] <= (size_control == `SIZE_BYTE)
+                | ((size_control == `SIZE_3) && (ir[7:6] == 2'b00))
+                | ((size_control == `SIZE_4) && (ir[13:12] == 2'b01))
+                | ((size_control == `SIZE_6) && (ir[5:3] != 3'b000));
+        // WORD
+        size[1] <= (size_control == `SIZE_WORD)
+                | ((size_control == `SIZE_1) && (ir[7:6] == 2'b00))
+                | ((size_control == `SIZE_1_PLUS) && (ir[7:6] == 2'b10))
+                | ((size_control == `SIZE_2) && (ir[6] == 1'b0))
+                | ((size_control == `SIZE_3) && (ir[7:6] == 2'b01))
+                | ((size_control == `SIZE_4) && (ir[13:12] == 2'b11))
+                | ((size_control == `SIZE_5) && (ir[8] == 1'b0));
+        // LONG
+        size[2] <= (size_control == `SIZE_LONG)
+                | ((size_control == `SIZE_1) && (ir[7:6] != 2'b00))
+                | ((size_control == `SIZE_1_PLUS) && (ir[7:6] != 2'b10))
+                | ((size_control == `SIZE_2) && (ir[6] == 1'b1))
+                | ((size_control == `SIZE_3) && (ir[7] == 1'b1))
+                | ((size_control == `SIZE_4) && (ir[12] == 1'b0))
+                | ((size_control == `SIZE_5) && (ir[8] == 1'b1))
+                | ((size_control == `SIZE_6) && (ir[5:3] == 3'b000));
+    end
+end
+/*OPTIM    
     else if(size_control == `SIZE_BYTE)                         size <= 2'b00;
     else if(size_control == `SIZE_WORD)                         size <= 2'b01;
     else if(size_control == `SIZE_LONG)                         size <= 2'b10;
@@ -1771,6 +1802,7 @@ always @(posedge clock or negedge reset_n) begin
     else if(size_control == `SIZE_5)                            size <= ( ir[8] == 1'b0 ) ? 2'b01 : 2'b10;
     else if(size_control == `SIZE_6)                            size <= ( ir[5:3] != 3'b000 ) ? 2'b00 : 2'b10;
 end
+*/
 
 always @(posedge clock or negedge reset_n) begin
     if(reset_n == 1'b0)                                         ea_reg <= 3'b000;
@@ -1813,12 +1845,12 @@ always @(posedge clock or negedge reset_n) begin
     else if(operand1_control == `OP1_FROM_OP2)                  operand1 <= operand2;
     else if(operand1_control == `OP1_FROM_ADDRESS)              operand1 <= address;
     else if(operand1_control == `OP1_FROM_DATA)                 operand1 <=
-                                                                    (size == 2'b00) ? { {24{data_read[7]}}, data_read[7:0] } :
-                                                                    (size == 2'b01) ? { {16{data_read[15]}}, data_read[15:0] } :
+                                                                    (size[0] == 1'b1) ? { {24{data_read[7]}}, data_read[7:0] } :
+                                                                    (size[1] == 1'b1) ? { {16{data_read[15]}}, data_read[15:0] } :
                                                                     data_read[31:0];
     else if(operand1_control == `OP1_FROM_IMMEDIATE)            operand1 <=
-                                                                    (size == 2'b00) ? { {24{prefetch_ir[71]}}, prefetch_ir[71:64] } :
-                                                                    (size == 2'b01) ? { {16{prefetch_ir[79]}}, prefetch_ir[79:64] } :
+                                                                    (size[0] == 1'b1) ? { {24{prefetch_ir[71]}}, prefetch_ir[71:64] } :
+                                                                    (size[1] == 1'b1) ? { {16{prefetch_ir[79]}}, prefetch_ir[79:64] } :
                                                                     prefetch_ir[79:48];
     else if(operand1_control == `OP1_FROM_RESULT)               operand1 <= result;
     else if(operand1_control == `OP1_MOVEQ)                     operand1 <= { {24{ir[7]}}, ir[7:0] };
@@ -1828,11 +1860,11 @@ always @(posedge clock or negedge reset_n) begin
     else if(operand1_control == `OP1_FROM_SR)                   operand1 <= { 16'b0, sr[15], 1'b0, sr[13], 2'b0, sr[10:8], 3'b0, sr[4:0] };
     else if(operand1_control == `OP1_FROM_USP)                  operand1 <= usp;
     else if(operand1_control == `OP1_FROM_AN)                   operand1 <= 
-                                                                    (size == 2'b01) ? { {16{An_output[15]}}, An_output[15:0] } :
+                                                                    (size[1] == 1'b1) ? { {16{An_output[15]}}, An_output[15:0] } :
                                                                     An_output[31:0];
     else if(operand1_control == `OP1_FROM_DN)                   operand1 <=
-                                                                    (size == 2'b00) ? { {24{Dn_output[7]}}, Dn_output[7:0] } :
-                                                                    (size == 2'b01) ? { {16{Dn_output[15]}}, Dn_output[15:0] } :
+                                                                    (size[0] == 1'b1) ? { {24{Dn_output[7]}}, Dn_output[7:0] } :
+                                                                    (size[1] == 1'b1) ? { {16{Dn_output[15]}}, Dn_output[15:0] } :
                                                                     Dn_output[31:0];
     else if(operand1_control == `OP1_FROM_IR)                   operand1 <= { 16'b0, ir[15:0] };
     else if(operand1_control == `OP1_FROM_FAULT_ADDRESS)        operand1 <= fault_address_state;
@@ -1853,6 +1885,17 @@ end
 
 always @(posedge clock or negedge reset_n) begin
     if(reset_n == 1'b0)                                         address <= 32'b0;
+    else if(address_control == `ADDRESS_INCR_BY_SIZE)           address <= ((size[0]) && ea_reg == 3'b111) ? address + 32'd2 : address + {29'd0,size};
+    else if(address_control == `ADDRESS_DECR_BY_SIZE)           address <= ((size[0]) && ea_reg == 3'b111) ? address - 32'd2 : address - {29'd0,size};
+    else if(address_control == `ADDRESS_INCR_BY_2)              address <= address + 32'd2;
+    else if(address_control == `ADDRESS_FROM_AN_OUTPUT)         address <= An_output;
+    else if(address_control == `ADDRESS_FROM_BASE_INDEX_OFFSET) address <= address + index + offset;
+    else if(address_control == `ADDRESS_FROM_IMM_16)            address <= { {16{prefetch_ir[79]}}, prefetch_ir[79:64] };
+    else if(address_control == `ADDRESS_FROM_IMM_32)            address <= prefetch_ir[79:48];
+    else if(address_control == `ADDRESS_FROM_PC_INDEX_OFFSET)   address <= pc_valid + index + offset;
+    else if(address_control == `ADDRESS_FROM_TRAP)              address <= {22'b0, trap[7:0], 2'b0};
+end
+/*OPTIM
     else if(address_control == `ADDRESS_INCR_BY_SIZE)           address <=
                                                                     (size == 2'b00 && ea_reg != 3'b111) ? address + 32'd1 :
                                                                     (size == 2'b01 || (size == 2'b00 && ea_reg == 3'b111)) ? address + 32'd2 :
@@ -1871,6 +1914,7 @@ always @(posedge clock or negedge reset_n) begin
     else if(address_control == `ADDRESS_FROM_PC_INDEX_OFFSET)   address <= pc_valid + index + offset;
     else if(address_control == `ADDRESS_FROM_TRAP)              address <= {22'b0, trap[7:0], 2'b0};
 end
+*/
 
 always @(posedge clock or negedge reset_n) begin
     if(reset_n == 1'b0)                                         address_type <= 1'b0;
@@ -2045,8 +2089,8 @@ module memory_registers(
     input [2:0] Dn_address,
     input [31:0] Dn_input,
     input Dn_write_enable,
-    // 00: byte, 01: word, 10: long
-    input [1:0] Dn_size,
+    // 001: byte, 010: word, 100: long
+    input [2:0] Dn_size,
     output [31:0] Dn_output,
 
     input [8:0] micro_pc,
@@ -2058,9 +2102,9 @@ wire An_ram_write_enable    = (An_address == 4'b0111) ? 1'b0 : An_write_enable;
 wire [31:0] An_ram_output;
 assign An_output            = (An_address == 4'b0111) ? usp : An_ram_output;
 
-wire [3:0] dn_byteena       = (Dn_size == 2'b00) ? 4'b0001 :
-                              (Dn_size == 2'b01) ? 4'b0011 :
-                              (Dn_size == 2'b10) ? 4'b1111 :
+wire [3:0] dn_byteena       = (Dn_size[0] == 1'b1) ? 4'b0001 :
+                              (Dn_size[1] == 1'b1) ? 4'b0011 :
+                              (Dn_size[2] == 1'b1) ? 4'b1111 :
                               4'b0000;
 
 always @(posedge clock or negedge reset_n) begin
@@ -2553,7 +2597,7 @@ module alu(
     // only ir[11:9] and ir[6]
     input [15:0] ir,
     // byte 2'b00, word 2'b01, long 2'b10
-    input [1:0] size,
+    input [2:0] size,
 
     input [31:0] operand1,
     input [31:0] operand2,
@@ -2563,28 +2607,101 @@ module alu(
 
     output reg [15:0] sr,
     output reg [31:0] result,
-    output reg [1:0] special = 2'b00
+    
+    output reg alu_signal,
+    output alu_mult_div_ready
 );
+
+//****************************************************** Altera-specific multiplication and division modules START
+/* Multiplication and division modules.
+ *
+ * Currently this module contains:
+ * - <em>lpm_mult</em> instantiation from Altera Megafunction/LPM library,
+ * - a sequential state machine for division written by Frederic Requin
+ */
+
+wire        mult_div_sign = ir[8];
+
+// 18-2 - division calculation, 1 - waiting for result read, 0 - idle
+reg  [4:0]  div_count;
+reg [16:0]  quotient;
+reg [31:0]  dividend, divider;
+
+// Compute the difference with borrow
+wire [32:0] div_diff = (dividend - divider);
+
+// Overflow flag: when (quotient >= 65536) or (signed division and (quotient >= 32768 or quotient < -32768))
+wire        div_overflow =
+    (quotient[16] == 1'b1 ||
+        (mult_div_sign == 1'b1 && (
+            ((operand1[31] ^ operand2[15]) == 1'b0 && quotient[15] == 1'b1) ||
+            ((operand1[31] ^ operand2[15]) == 1'b1 && quotient[15:0] > 16'd32768) )));
+
+wire [15:0] div_quotient = 
+    // positive quotient
+    (((operand1[31] ^ operand2[15]) & mult_div_sign) == 1'b0)? quotient[15:0] :
+    // negative quotient
+    -quotient[15:0];
+
+wire [15:0] div_remainder =
+    // positive remainder
+    ((operand1[31] & mult_div_sign) == 1'b0)? dividend[15:0] :
+    // negative remainder
+    -dividend[15:0];
+
+always @(posedge clock or negedge reset_n) begin
+    if(reset_n == 1'b0) begin
+        div_count <= 5'd0;
+    end
+    // Cycle #0 : load the registers
+    else if(alu_control == `ALU_MULS_MULU_DIVS_DIVU && ir[15:12] == 4'b1000 && div_count == 5'd0) begin
+        // 17 cycles to finish + wait state
+        div_count   <= 5'd18;
+        // Clear the quotient
+        quotient    <= 17'd0;
+    
+        // Unsigned divide or positive numerator
+        if ((!mult_div_sign) || (!operand1[31]))    dividend <= operand1;
+        // Negative numerator
+        else                                        dividend <= -operand1;
+        
+        // Unsigned divide or positive denominator
+        if ((!mult_div_sign) || (!operand2[15]))    divider <= {operand2[15:0],16'd0};
+        // Negative denominator
+        else                                        divider <= {-operand2[15:0],16'd0};
+    end
+    // Cycles #1-17 : division calculation
+    else if(div_count > 5'd1) begin
+        // Check difference's sign
+        if (!div_diff[32]) begin
+          // Difference is positive : shift a one
+          dividend <= div_diff[31:0];
+          quotient <= {quotient[15:0], 1'b1};
+        end
+        else begin
+          // Difference is negative : shift a zero
+          quotient <= {quotient[15:0], 1'b0};
+        end
+        // Shift right divider
+        divider <= {1'b0, divider[31:1]};
+        // Count one bit
+        div_count <= div_count - 5'd1;
+    end
+    // result read
+    else if(alu_control == `ALU_MULS_MULU_DIVS_DIVU && ir[15:12] == 4'b1000 && div_count == 5'd1) begin
+        // goto idle
+        div_count <= div_count - 5'd1;
+    end
+end
+
+
+
+/*OPTIM
 
 wire [31:0] divu_quotient;
 wire [15:0] divu_remainder;
 wire [31:0] divs_quotient;
 wire [15:0] divs_remainder;
-wire [31:0] mulu_result;
-wire [31:0] muls_result;
-
-//****************************************************** Altera-specific multiplication and division modules START
-/* Multiplication and division modules.
- *
- * Currently this module contains <em>lpm_divide</em> and <em>lpm_mult</em> instantiations
- * from Altera Megafunction/LPM library.
- *
- * There are separate modules for:
- *  - unsigned multiplication,
- *  - signed multiplication,
- *  - unsigned division,
- *  - singed division.
- */
 
 // DIVU: 32-bit operand1 unsigned / 16-bit operand2 unsigned = {16-bit remainer unsigned, 16-bit quotient unsigned}
 // DIVU: division by 0: trap,   overflow when quotient > 16-bit signed integer, operands not affected
@@ -2619,7 +2736,26 @@ defparam
     divs_inst.lpm_drepresentation = "SIGNED",
     divs_inst.lpm_hint = "LPM_REMAINDERPOSITIVE=FALSE",
     divs_inst.lpm_pipeline = 30;
+*/
 
+// MULS/MULU: 16-bit operand1[15:0] signed/unsigned * operand2[15:0] signed/unsigned = 32-bit result signed/unsigned
+// Optimization by Frederic Requin
+wire [33:0] mult_result;
+
+lpm_mult muls(
+    .clock  (clock),
+    .dataa  ({operand1[15] & mult_div_sign, operand1[15:0]}),
+    .datab  ({operand2[15] & mult_div_sign, operand2[15:0]}),
+    .result (mult_result)
+);
+defparam
+    muls.lpm_widtha = 17,
+    muls.lpm_widthb = 17,
+    muls.lpm_widthp = 34,
+    muls.lpm_representation = "SIGNED",
+    muls.lpm_pipeline = 1;
+
+/*OPTIM - count LE & MHz in comment in switch
 // MULU: 16-bit operand1[15:0] unsigned * 16-bit operand2 unsigned = 32-bit result unsigned
 lpm_mult mulu_inst(
     .clock(clock),
@@ -2647,16 +2783,21 @@ defparam
     muls_inst.lpm_widthp = 32,
     muls_inst.lpm_representation = "SIGNED",
     muls_inst.lpm_pipeline = 18;
+*/
+
+// multiplication ready in one cycle, division ready when div_count in waiting or idle state
+assign alu_mult_div_ready = (div_count == 5'd1 || div_count == 5'd0);
+
 //****************************************************** Altera-specific multiplication and division modules END
 
 // ALU internal defines
-`define Sm ( (size == 2'b00) ? operand2[7] : (size == 2'b01) ? operand2[15] : operand2[31])
+`define Sm ((size[0] == 1'b1) ? operand2[7] :           (size[1] == 1'b1) ? operand2[15] :            operand2[31])
 
-`define Dm ( (size == 2'b00) ? operand1[7] : (size == 2'b01) ? operand1[15] : operand1[31])
+`define Dm ((size[0] == 1'b1) ? operand1[7] :           (size[1] == 1'b1) ? operand1[15] :            operand1[31])
 
-`define Rm ( (size == 2'b00) ? result[7] : (size == 2'b01) ? result[15] : result[31])
+`define Rm ((size[0] == 1'b1) ? result[7] :             (size[1] == 1'b1) ? result[15] :              result[31])
 
-`define Z (    (size == 2'b00) ? (result[7:0] == 8'b0) : (size == 2'b01) ? (result[15:0] == 16'b0) : (result[31:0] == 32'b0))
+`define Z  ((size[0] == 1'b1) ? (result[7:0] == 8'b0) : (size[1] == 1'b1) ? (result[15:0] == 16'b0) : (result[31:0] == 32'b0))
 
 // ALU operations
 
@@ -2667,7 +2808,7 @@ always @(posedge clock or negedge reset_n) begin
     if(reset_n == 1'b0) begin
         sr <= { 1'b0, 1'b0, 1'b1, 2'b0, 3'b111, 8'b0 };
         result <= 32'd0;
-        special <= 2'b0;
+        alu_signal <= 1'b0;
         interrupt_mask_copy <= 3'b0;
         was_interrupt <= 1'b0;
     end
@@ -2731,7 +2872,7 @@ always @(posedge clock or negedge reset_n) begin
 
             `ALU_SIGN_EXTEND: begin
                 // move operand1 with sign-extension to result
-                if(size == 2'b01) begin
+                if(size[1] == 1'b1) begin
                     result <= { {16{operand1[15]}}, operand1[15:0] };
                 end
                 else begin
@@ -2890,9 +3031,9 @@ always @(posedge clock or negedge reset_n) begin
 
             `ALU_ASL_LSL_ROL_ROXL_ASR_LSR_ROR_ROXR_prepare: begin
 
-                if(size == 2'b00) result[7:0] = operand1[7:0];
-                else if(size == 2'b01) result[15:0] = operand1[15:0];
-                else if(size == 2'b10) result[31:0] = operand1[31:0];
+                if(size[0] == 1'b1)         result[7:0] = operand1[7:0];
+                else if(size[1] == 1'b1)    result[15:0] = operand1[15:0];
+                else if(size[2] == 1'b1)    result[31:0] = operand1[31:0];
 
                 // X for ASL
                 //if(operand2[5:0] > 6'b0 && ir[8] == 1'b1 && ((ir[7:6] == 2'b11 && ir[10:9] == 2'b00) || (ir[7:6] != 2'b11 && ir[4:3] == 2'b00)) ) begin
@@ -2954,9 +3095,9 @@ always @(posedge clock or negedge reset_n) begin
                 end
                 // ASR
                 else if( ((ir[7:6] == 2'b11 && ir[10:9] == 2'b00) || (ir[7:6] != 2'b11 && ir[4:3] == 2'b00)) && ir[8] == 1'b0) begin
-                    if(size == 2'b00)         result[7:0] = { operand1[7], operand1[7:1] };
-                    else if(size == 2'b01)    result[15:0] = { operand1[15], operand1[15:1] };
-                    else if(size == 2'b10)    result[31:0] = { operand1[31], operand1[31:1] };
+                    if(size[0] == 1'b1)         result[7:0] = { operand1[7], operand1[7:1] };
+                    else if(size[1] == 1'b1)    result[15:0] = { operand1[15], operand1[15:1] };
+                    else if(size[2] == 1'b1)    result[31:0] = { operand1[31], operand1[31:1] };
 
                     sr[1] <= 1'b0;          // V
                     sr[0] <= operand1[0];   // C
@@ -2964,9 +3105,9 @@ always @(posedge clock or negedge reset_n) begin
                 end
                 // LSR
                 else if( ((ir[7:6] == 2'b11 && ir[10:9] == 2'b01) || (ir[7:6] != 2'b11 && ir[4:3] == 2'b01)) && ir[8] == 1'b0) begin
-                    if(size == 2'b00)         result[7:0] = { 1'b0, operand1[7:1] };
-                    else if(size == 2'b01)    result[15:0] = { 1'b0, operand1[15:1] };
-                    else if(size == 2'b10)    result[31:0] = { 1'b0, operand1[31:1] };
+                    if(size[0] == 1'b1)         result[7:0] = { 1'b0, operand1[7:1] };
+                    else if(size[1] == 1'b1)    result[15:0] = { 1'b0, operand1[15:1] };
+                    else if(size[2] == 1'b1)    result[31:0] = { 1'b0, operand1[31:1] };
 
                     sr[1] <= 1'b0;          // V
                     sr[0] <= operand1[0];   // C
@@ -2974,9 +3115,9 @@ always @(posedge clock or negedge reset_n) begin
                 end
                 // ROR
                 else if( ((ir[7:6] == 2'b11 && ir[10:9] == 2'b11) || (ir[7:6] != 2'b11 && ir[4:3] == 2'b11)) && ir[8] == 1'b0) begin
-                    if(size == 2'b00)         result[7:0] = { operand1[0], operand1[7:1] };
-                    else if(size == 2'b01)    result[15:0] = { operand1[0], operand1[15:1] };
-                    else if(size == 2'b10)    result[31:0] = { operand1[0], operand1[31:1] };
+                    if(size[0] == 1'b1)         result[7:0] = { operand1[0], operand1[7:1] };
+                    else if(size[1] == 1'b1)    result[15:0] = { operand1[0], operand1[15:1] };
+                    else if(size[2] == 1'b1)    result[31:0] = { operand1[0], operand1[31:1] };
 
                     sr[1] <= 1'b0;          // V
                     sr[0] <= operand1[0];   // C
@@ -2984,9 +3125,9 @@ always @(posedge clock or negedge reset_n) begin
                 end
                 // ROXR
                 else if( ((ir[7:6] == 2'b11 && ir[10:9] == 2'b10) || (ir[7:6] != 2'b11 && ir[4:3] == 2'b10)) && ir[8] == 1'b0) begin
-                    if(size == 2'b00)         result[7:0] = {sr[4], operand1[7:1]};
-                    else if(size == 2'b01)    result[15:0] = {sr[4], operand1[15:1]};
-                    else if(size == 2'b10)    result[31:0] = {sr[4], operand1[31:1]};
+                    if(size[0] == 1'b1)         result[7:0] = {sr[4], operand1[7:1]};
+                    else if(size[1] == 1'b1)    result[15:0] = {sr[4], operand1[15:1]};
+                    else if(size[2] == 1'b1)    result[31:0] = {sr[4], operand1[31:1]};
 
                     sr[1] <= 1'b0;          // V
                     sr[0] <= operand1[0];   // C
@@ -3062,27 +3203,27 @@ always @(posedge clock or negedge reset_n) begin
                 if( operand1[15:0] != operand2[15:0] && ((~`Dm & `Sm) | (~`Dm & ~`Sm & ~`Rm) | (`Dm & `Sm & ~`Rm)) == 1'b1 ) begin
                     // clear N
                     sr[3] <= 1'b0;
-                    special <= 2'b01;
+                    alu_signal <= 1'b1;
                 end
                 // operand1 < 0
                 else if( operand1[15] == 1'b1 ) begin
                     // set N
                     sr[3] <= 1'b1;
-                    special <= 2'b01;
+                    alu_signal <= 1'b1;
                 end
                 // no trap
                 else begin
                     // N undefined: not affected
-                    special <= 2'b00;
+                    alu_signal <= 1'b0;
                 end
 
                 // X not affected
             end
 
-            `ALU_MULS_MULU_DIVS_DIVU: begin // 2206 LE, 106 MHz
+            `ALU_MULS_MULU_DIVS_DIVU: begin
 
                 // division by 0
-                if( ir[15:12] == 4'b1000 && operand2[15:0] == 16'b0 ) begin
+                if(ir[15:12] == 4'b1000 && operand2[15:0] == 16'b0) begin
                     // X not affected
                     // C cleared
                     sr[0] <= 1'b0;
@@ -3092,12 +3233,19 @@ always @(posedge clock or negedge reset_n) begin
                     sr[3] <= 1'b0;
 
                     // set trap
-                    special <= 2'b01;
+                    alu_signal <= 1'b1;
+                end
+                // division in idle state
+                else if(ir[15:12] == 4'b1000 && div_count == 5'd0) begin
+                    alu_signal <= 1'b0;
                 end
                 // division overflow: divu, divs
-                else if(     ((ir[15:12] == 4'b1000 && ir[8] == 1'b0) && (divu_quotient[31:16] != 16'd0)) ||
-                            ((ir[15:12] == 4'b1000 && ir[8] == 1'b1) && (divs_quotient[31:16] != {16{divs_quotient[15]}}))
+                else if(ir[15:12] == 4'b1000 && div_overflow == 1'b1) begin
+                /*OPTIM
+                else if( ((ir[15:12] == 4'b1000 && mult_div_sign == 1'b0) && (divu_quotient[31:16] != 16'd0)) ||
+                         ((ir[15:12] == 4'b1000 && mult_div_sign == 1'b1) && (divs_quotient[31:16] != {16{divs_quotient[15]}}))
                 ) begin
+                */
                     // X not affected
                     // C cleared
                     sr[0] <= 1'b0;
@@ -3108,28 +3256,28 @@ always @(posedge clock or negedge reset_n) begin
                     sr[3] <= 1'b1;
 
                     // set trap
-                    special <= 2'b10;
+                    alu_signal <= 1'b1;
                 end
                 // division
                 else if( ir[15:12] == 4'b1000 ) begin
-                    result[31:0] <= (ir[8] == 1'b0)? {divu_remainder[15:0], divu_quotient[15:0]} : {divs_remainder[15:0], divs_quotient[15:0]};
-
+                    result[31:0] <= {div_remainder, div_quotient};
+                    
                     // X not affected
                     // C cleared
                     sr[0] <= 1'b0;
                     // V cleared
                     sr[1] <= 1'b0;
                     // Z
-                    sr[2] <= (ir[8] == 1'b0)? (divu_quotient[15:0] == 16'b0) : (divs_quotient[15:0] == 16'b0);
+                    sr[2] <= (div_quotient == 16'b0);
                     // N
-                    sr[3] <= (ir[8] == 1'b0)? (divu_quotient[15] == 1'b1) : (divs_quotient[15] == 1'b1);
+                    sr[3] <= (div_quotient[15] == 1'b1);
 
                     // set trap
-                    special <= 2'b00;
+                    alu_signal <= 1'b0;
                 end
                 // multiplication
                 else if( ir[15:12] == 4'b1100 ) begin
-                    result[31:0] <= (ir[8] == 1'b0)? mulu_result[31:0] : muls_result[31:0];
+                    result[31:0] <= mult_result[31:0];
 
                     // X not affected
                     // C cleared
@@ -3137,12 +3285,12 @@ always @(posedge clock or negedge reset_n) begin
                     // V cleared
                     sr[1] <= 1'b0;
                     // Z
-                    sr[2] <= (ir[8] == 1'b0)? (mulu_result[31:0] == 32'b0) : (muls_result[31:0] == 32'b0);
+                    sr[2] <= (mult_result[31:0] == 32'b0);
                     // N
-                    sr[3] <= (ir[8] == 1'b0)? (mulu_result[31] == 1'b1) : (muls_result[31] == 1'b1);
+                    sr[3] <= (mult_result[31] == 1'b1);
 
                     // set trap
-                    special <= 2'b00;
+                    alu_signal <= 1'b0;
                 end
             end
 
@@ -3181,14 +3329,19 @@ always @(posedge clock or negedge reset_n) begin
 
 
             `ALU_NEGX_CLR_NEG_NOT_NBCD_SWAP_EXT: begin
+                // NEGX / CLR / NEG / NOT
+                if ((ir[11:8] == 4'b0000) || (ir[11:8] == 4'b0010) || (ir[11:8] == 4'b0100) || (ir[11:8] == 4'b0110))
+                    result = 32'b0 - (operand1[31:0] & {32{ir[10] | ~ir[9]}}) - ((sr[4] & ~ir[10] & ~ir[9]) | (ir[10] & ir[9]));
+                /*OPTIM
                 // NEGX
                 if(    ir[11:8] == 4'b0000 ) result = 32'b0 - operand1[31:0] - sr[4];
                 // CLR
-                else if( ir[11:8] == 4'b0010 ) result = 32'b0;
+                else if (ir[11:8] == 4'b0010) result = 32'b0;
                 // NEG
                 else if( ir[11:8] == 4'b0100 ) result = 32'b0 - operand1[31:0];
                 // NOT
                 else if( ir[11:8] == 4'b0110 ) result = ~operand1[31:0];
+                */
                 // NBCD
                 else if( ir[11:6] == 6'b1000_00 ) begin
                     
@@ -3322,35 +3475,36 @@ module microcode_branch(
     input clock,
     input reset_n,
 
-    input [4:0] movem_loop,
-    input [15:0] movem_reg,
-    input [31:0] operand2,
-    input [1:0] special,
-    input condition,
-    input [31:0] result,
-    input overflow,
-    input stop_flag,
-    input [15:0] ir,
-    input [7:0] decoder_trap,
-    input trace_flag,
-    input group_0_flag,
-    input [2:0] interrupt_mask,
+    input [4:0]     movem_loop,
+    input [15:0]    movem_reg,
+    input [31:0]    operand2,
+    input           alu_signal,
+    input           alu_mult_div_ready,
+    input           condition,
+    input [31:0]    result,
+    input           overflow,
+    input           stop_flag,
+    input [15:0]    ir,
+    input [7:0]     decoder_trap,
+    input           trace_flag,
+    input           group_0_flag,
+    input [2:0]     interrupt_mask,
 
-    input [8:0] load_ea,
-    input [8:0] perform_ea_read,
-    input [8:0] perform_ea_write,
-    input [8:0] save_ea,
-    input [8:0] decoder_micropc,
+    input [8:0]     load_ea,
+    input [8:0]     perform_ea_read,
+    input [8:0]     perform_ea_write,
+    input [8:0]     save_ea,
+    input [8:0]     decoder_micropc,
 
-    input prefetch_ir_valid_32,
-    input prefetch_ir_valid,
-    input jmp_address_trap,
-    input jmp_bus_trap,
-    input finished,
+    input           prefetch_ir_valid_32,
+    input           prefetch_ir_valid,
+    input           jmp_address_trap,
+    input           jmp_bus_trap,
+    input           finished,
 
-    input [3:0] branch_control,
-    input [3:0] branch_offset,
-    output [8:0] micro_pc
+    input [3:0]     branch_control,
+    input [3:0]     branch_offset,
+    output [8:0]    micro_pc
 );
 
 reg [8:0] micro_pc_0 = 9'd0;
@@ -3364,8 +3518,8 @@ assign micro_pc =
     (   (branch_control == `BRANCH_movem_loop               && movem_loop == 5'b10000) ||
         (branch_control == `BRANCH_movem_reg                && movem_reg[0] == 0) ||
         (branch_control == `BRANCH_operand2                 && operand2[5:0] == 6'b0) ||
-        (branch_control == `BRANCH_special_01               && special != 2'b01) ||
-        (branch_control == `BRANCH_special_10               && special == 2'b10) ||
+        (branch_control == `BRANCH_alu_signal               && alu_signal == 1'b0) ||
+        (branch_control == `BRANCH_alu_mult_div_ready       && alu_mult_div_ready == 1'b1) ||
         (branch_control == `BRANCH_condition_0              && condition == 1'b0) ||
         (branch_control == `BRANCH_condition_1              && condition == 1'b1) ||
         (branch_control == `BRANCH_result                   && result[15:0] == 16'hFFFF) ||

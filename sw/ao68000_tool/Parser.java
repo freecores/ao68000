@@ -603,12 +603,12 @@ class Parser {
 		GenerateMicrocode.entry(newline, "BRANCH_operand2");
 		return new Parser(false);
 	}
-	Parser BRANCH_special_01() throws Exception {
-		GenerateMicrocode.entry(newline, "BRANCH_special_01");
+	Parser BRANCH_alu_signal() throws Exception {
+		GenerateMicrocode.entry(newline, "BRANCH_alu_signal");
 		return new Parser(false);
 	}
-	Parser BRANCH_special_10() throws Exception {
-		GenerateMicrocode.entry(newline, "BRANCH_special_10");
+	Parser BRANCH_alu_mult_div_ready() throws Exception {
+		GenerateMicrocode.entry(newline, "BRANCH_alu_mult_div_ready");
 		return new Parser(false);
 	}
 	Parser BRANCH_condition_0() throws Exception {
