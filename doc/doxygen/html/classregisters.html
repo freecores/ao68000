@@ -756,7 +756,7 @@ Signals</h2></td></tr>
 <a name="l01765"></a>01765     <span class="vhdlkeyword">if</span>(<a class="code" href="classregisters.html#a7e3a00b7da8ae2fbd8336c34673c64a8">reset_n</a> == <span class="vhdllogic">1&#39;b0</span>) <span class="vhdlkeyword">begin</span>
 <a name="l01766"></a>01766         <span class="vhdlchar">size</span> &lt;= <span class="vhdllogic">2&#39;b00</span>;
 <a name="l01767"></a>01767     <span class="vhdlkeyword">end</span>
-<a name="l01768"></a>01768     <span class="vhdlkeyword">else</span> <span class="vhdlkeyword">begin</span>
+<a name="l01768"></a>01768     <span class="vhdlkeyword">else</span> <span class="vhdlkeyword">if</span>(<span class="vhdlchar">size_control</span> != <a class="code" href="ao68000_8v.html#a85698146140d774ffe2b54e5be255726">`SIZE_IDLE</a><span class="vhdlchar"></span>) <span class="vhdlkeyword">begin</span>
 <a name="l01769"></a>01769         <span class="keyword">// BYTE</span>
 <a name="l01770"></a>01770         <span class="vhdlchar">size</span>[<span class="vhdllogic">0</span>] &lt;= (<span class="vhdlchar">size_control</span> == <a class="code" href="ao68000_8v.html#a8a04b85bed76a4381d1187aec9694a7e">`SIZE_BYTE</a><span class="vhdlchar"></span>)
 <a name="l01771"></a>01771                 | ((<span class="vhdlchar">size_control</span> == <a class="code" href="ao68000_8v.html#ad8d417f0548efb4299bed1ed75004cbe">`SIZE_3</a><span class="vhdlchar"></span>) &amp;&amp; (<span class="vhdlchar">ir</span>[<span class="vhdllogic">7</span>:<span class="vhdllogic">6</span>] == <span class="vhdllogic">2&#39;b00</span>))
@@ -1394,7 +1394,7 @@ Signals</h2></td></tr>
 <li><a class="el" href="ao68000_8v_source.html">ao68000.v</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 15 2011 16:54:37 for ao68000 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 15 2011 17:55:18 for ao68000 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
 </body>

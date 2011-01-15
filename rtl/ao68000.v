@@ -98,9 +98,9 @@
 `define ADDRESS_FROM_TRAP                                   4'd9    // move trap {22'b0, trap[7:0], 2'b0}
 
 `define SIZE_IDLE                                           4'd0
-`define SIZE_BYTE                                           4'd1    // load byte: 2'b00
-`define SIZE_WORD                                           4'd2    // load word: 2'b01
-`define SIZE_LONG                                           4'd3    // load long: 2'b10
+`define SIZE_BYTE                                           4'd1    // load byte: 3'b001
+`define SIZE_WORD                                           4'd2    // load word: 3'b010
+`define SIZE_LONG                                           4'd3    // load long: 3'b100
 `define SIZE_1                                              4'd4    // SIZE.1: word ( ir[7:6] == 2'b00 ), long ( ir[7:6] == 2'b01 )
 `define SIZE_1_PLUS                                         4'd5    // SIZE.1+: word ( ir[7:6] == 2'b10 ), long ( ir[7:6] == 2'b11 )
 `define SIZE_2                                              4'd6    // SIZE.2: word ( ir[6] == 1'b0 ), long ( ir[6] == 1'b1 )
@@ -1765,7 +1765,7 @@ always @(posedge clock or negedge reset_n) begin
     if(reset_n == 1'b0) begin
         size <= 2'b00;
     end
-    else begin
+    else if(size_control != `SIZE_IDLE) begin
         // BYTE
         size[0] <= (size_control == `SIZE_BYTE)
                 | ((size_control == `SIZE_3) && (ir[7:6] == 2'b00))
