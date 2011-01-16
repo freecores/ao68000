@@ -85,8 +85,8 @@ endif
 	cd ./tmp/compare_with_winuae/verilog && iverilog -y. -y./../../../rtl -y./../../../tests/compare_with_winuae/verilog -o tb_ao68000 ./../../../tests/compare_with_winuae/verilog/tb_ao68000.v
 	cp ./rtl/ao68000_microcode.mif ./tmp/compare_with_winuae/verilog
 
-START_IR_DEC 	:= 57344
-END_IR_DEC 	:= 61440
+START_IR_DEC 	:= 33024
+END_IR_DEC 	:= 33040
 TERM_PROGRAM 	:= xterm
 COUNT 		:= 4
 COUNT_LIST 	:= $(wordlist 1,$(COUNT),0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19)

@@ -531,6 +531,10 @@ class Parser {
 		GenerateMicrocode.entry(newline, "ALU_ARITHMETIC_LOGIC");
 		return new Parser(false);
 	}
+	Parser ALU_ABCD_SBCD_ADDX_SUBX_prepare() throws Exception {
+		GenerateMicrocode.entry(newline, "ALU_ABCD_SBCD_ADDX_SUBX_prepare");
+		return new Parser(false);
+	}
 	Parser ALU_ABCD_SBCD_ADDX_SUBX() throws Exception {
 		GenerateMicrocode.entry(newline, "ALU_ABCD_SBCD_ADDX_SUBX");
 		return new Parser(false);

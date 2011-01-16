@@ -90,7 +90,7 @@
  *  - CISC processor with microcode,
  *  - WISHBONE revision B.3 compatible MASTER interface,
  *  - Not cycle exact with the MC68000, some instructions take more cycles to complete, some less,
- *  - Uses about 4750 LE on Altera Cyclone II and about 45600 bits of RAM for microcode,
+ *  - Uses about 4810 LE on Altera Cyclone II and about 45600 bits of RAM for microcode,
  *  - Tested against the WinUAE M68000 software emulator. Every 16-bit instruction was tested with random register contents and RAM contents
  *    (\ref page_verification). The result of execution was compared,
  *  - Contains a simple prefetch which is capable of holding up to 5 16-bit instruction words,
@@ -110,7 +110,7 @@
  *  - Data port maximum operand size: 32-bits,
  *  - Data transfer ordering: BIG ENDIAN,
  *  - Data transfer sequencing: UNDEFINED, 
- *  - Constraints on <tt>CLK_I</tt> signal: described in \ref page_spec_clocks, maximum frequency: about 82 MHz.
+ *  - Constraints on <tt>CLK_I</tt> signal: described in \ref page_spec_clocks, maximum frequency: about 90 MHz.
  *
  * <h3>Use</h3>
  * - The ao68000 is used as the processor for the OpenCores aoOCS project - Wishbone Amiga OCS SoC(http://opencores.org/project,aoocs).
@@ -372,7 +372,7 @@
  * <tr style="background: #CCCCCC; font-weight: bold;">
  *     <td>Max</td><td>Min</td><td>Resolution</td></tr>
  *
- * <tr><td>CLK_I</td><td>Input Port</td><td>82</td><td>-</td><td>-</td><td>-</td><td>System clock.</td></tr>
+ * <tr><td>CLK_I</td><td>Input Port</td><td>90</td><td>-</td><td>-</td><td>-</td><td>System clock.</td></tr>
  * </table>
  */
 

@@ -225,21 +225,22 @@
 `define ALU_MOVEP_R2M_4                                     5'd10
 `define ALU_SIGN_EXTEND                                     5'd11
 `define ALU_ARITHMETIC_LOGIC                                5'd12
-`define ALU_ABCD_SBCD_ADDX_SUBX                             5'd13
-`define ALU_ASL_LSL_ROL_ROXL_ASR_LSR_ROR_ROXR_prepare       5'd14
-`define ALU_ASL_LSL_ROL_ROXL_ASR_LSR_ROR_ROXR               5'd15
-`define ALU_MOVE                                            5'd16
-`define ALU_ADDA_SUBA_CMPA_ADDQ_SUBQ                        5'd17
-`define ALU_CHK                                             5'd18
-`define ALU_MULS_MULU_DIVS_DIVU                             5'd19
-`define ALU_BCHG_BCLR_BSET_BTST                             5'd20
-`define ALU_TAS                                             5'd21
-`define ALU_NEGX_CLR_NEG_NOT_NBCD_SWAP_EXT                  5'd22
-`define ALU_SIMPLE_LONG_ADD                                 5'd23
-`define ALU_SIMPLE_LONG_SUB                                 5'd24
-`define ALU_MOVE_TO_CCR_SR_RTE_RTR_STOP_LOGIC_TO_CCR_SR     5'd25
-`define ALU_SIMPLE_MOVE                                     5'd26
-`define ALU_LINK_MOVE                                       5'd27
+`define ALU_ABCD_SBCD_ADDX_SUBX_prepare                     5'd13
+`define ALU_ABCD_SBCD_ADDX_SUBX                             5'd14
+`define ALU_ASL_LSL_ROL_ROXL_ASR_LSR_ROR_ROXR_prepare       5'd15
+`define ALU_ASL_LSL_ROL_ROXL_ASR_LSR_ROR_ROXR               5'd16
+`define ALU_MOVE                                            5'd17
+`define ALU_ADDA_SUBA_CMPA_ADDQ_SUBQ                        5'd18
+`define ALU_CHK                                             5'd19
+`define ALU_MULS_MULU_DIVS_DIVU                             5'd20
+`define ALU_BCHG_BCLR_BSET_BTST                             5'd21
+`define ALU_TAS                                             5'd22
+`define ALU_NEGX_CLR_NEG_NOT_NBCD_SWAP_EXT                  5'd23
+`define ALU_SIMPLE_LONG_ADD                                 5'd24
+`define ALU_SIMPLE_LONG_SUB                                 5'd25
+`define ALU_MOVE_TO_CCR_SR_RTE_RTR_STOP_LOGIC_TO_CCR_SR     5'd26
+`define ALU_SIMPLE_MOVE                                     5'd27
+`define ALU_LINK_MOVE                                       5'd28
 
 `define BRANCH_IDLE                                         4'd0
 `define BRANCH_movem_loop                                   4'd1    // BRANCH(movem_loop == 4'b1000)
@@ -315,79 +316,79 @@
 `define MICRO_DATA_branch                                                            micro_data[83:80]
 `define MICRO_DATA_procedure                                                         micro_data[87:84]
 
-`define MICROPC_MOVE                                                                 9'd231
-`define MICROPC_MOVE_USP_to_An                                                       9'd400
-`define MICROPC_TAS                                                                  9'd332
-`define MICROPC_BSR                                                                  9'd430
+`define MICROPC_MOVE                                                                 9'd232
+`define MICROPC_MOVE_USP_to_An                                                       9'd401
+`define MICROPC_TAS                                                                  9'd333
+`define MICROPC_BSR                                                                  9'd431
 `define MICROPC_ADDRESS_BUS_TRAP                                                     9'd3
 `define MICROPC_MOVEP_register_to_memory                                             9'd106
-`define MICROPC_NEGX_CLR_NEG_NOT_NBCD                                                9'd337
-`define MICROPC_RTS                                                                  9'd471
+`define MICROPC_NEGX_CLR_NEG_NOT_NBCD                                                9'd338
+`define MICROPC_RTS                                                                  9'd472
 `define MICROPC_MAIN_LOOP                                                            9'd53
-`define MICROPC_ADDA_SUBA                                                            9'd268
-`define MICROPC_MOVE_TO_CCR_MOVE_TO_SR                                               9'd391
-`define MICROPC_MOVE_FROM_SR                                                         9'd388
+`define MICROPC_ADDA_SUBA                                                            9'd269
+`define MICROPC_MOVE_TO_CCR_MOVE_TO_SR                                               9'd392
+`define MICROPC_MOVE_FROM_SR                                                         9'd389
 `define MICROPC_LOAD_EA_d8_PC_Xn                                                     9'd79
 `define MICROPC_TRAP_ENTRY                                                           9'd35
 `define MICROPC_PERFORM_EA_READ_memory                                               9'd89
-`define MICROPC_RESET                                                                9'd485
+`define MICROPC_RESET                                                                9'd486
 `define MICROPC_PERFORM_EA_WRITE_Dn                                                  9'd91
-`define MICROPC_ASL_LSL_ROL_ROXL_ASR_LSR_ROR_ROXR_all_memory                         9'd225
-`define MICROPC_MOVEA                                                                9'd239
-`define MICROPC_TST                                                                  9'd344
-`define MICROPC_BTST_register                                                        9'd326
+`define MICROPC_ASL_LSL_ROL_ROXL_ASR_LSR_ROR_ROXR_all_memory                         9'd226
+`define MICROPC_MOVEA                                                                9'd240
+`define MICROPC_TST                                                                  9'd345
+`define MICROPC_BTST_register                                                        9'd327
 `define MICROPC_LOAD_EA_d8_An_Xn                                                     9'd68
-`define MICROPC_MULS_MULU_DIVS_DIVU                                                  9'd290
-`define MICROPC_MOVEQ                                                                9'd307
-`define MICROPC_CMPA                                                                 9'd275
-`define MICROPC_EOR                                                                  9'd245
+`define MICROPC_MULS_MULU_DIVS_DIVU                                                  9'd291
+`define MICROPC_MOVEQ                                                                9'd308
+`define MICROPC_CMPA                                                                 9'd276
+`define MICROPC_EOR                                                                  9'd246
 `define MICROPC_LOAD_EA_xxx_W                                                        9'd72
-`define MICROPC_DBcc                                                                 9'd374
+`define MICROPC_DBcc                                                                 9'd375
 `define MICROPC_CMPI                                                                 9'd184
 `define MICROPC_LOAD_EA_xxx_L                                                        9'd74
-`define MICROPC_CMPM                                                                 9'd205
-`define MICROPC_MOVE_USP_to_USP                                                      9'd395
-`define MICROPC_ADDQ_SUBQ_not_An                                                     9'd348
-`define MICROPC_ULNK                                                                 9'd419
-`define MICROPC_EXG                                                                  9'd197
-`define MICROPC_ADD_to_mem_SUB_to_mem_AND_to_mem_OR_to_mem                           9'd250
-`define MICROPC_Bcc_BRA                                                              9'd362
+`define MICROPC_CMPM                                                                 9'd206
+`define MICROPC_MOVE_USP_to_USP                                                      9'd396
+`define MICROPC_ADDQ_SUBQ_not_An                                                     9'd349
+`define MICROPC_ULNK                                                                 9'd420
+`define MICROPC_EXG                                                                  9'd198
+`define MICROPC_ADD_to_mem_SUB_to_mem_AND_to_mem_OR_to_mem                           9'd251
+`define MICROPC_Bcc_BRA                                                              9'd363
 `define MICROPC_PERFORM_EA_READ_An                                                   9'd86
 `define MICROPC_LOAD_EA_d16_PC                                                       9'd76
-`define MICROPC_NOP                                                                  9'd479
+`define MICROPC_NOP                                                                  9'd480
 `define MICROPC_MOVEM_register_to_memory_predecrement                                9'd131
-`define MICROPC_RTE_RTR                                                              9'd459
-`define MICROPC_TRAP                                                                 9'd480
-`define MICROPC_ADDQ_SUBQ_An                                                         9'd351
+`define MICROPC_RTE_RTR                                                              9'd460
+`define MICROPC_TRAP                                                                 9'd481
+`define MICROPC_ADDQ_SUBQ_An                                                         9'd352
 `define MICROPC_MOVEM_register_to_memory_control                                     9'd147
-`define MICROPC_BTST_immediate                                                       9'd315
+`define MICROPC_BTST_immediate                                                       9'd316
 `define MICROPC_MOVEP_memory_to_register                                             9'd98
 `define MICROPC_PERFORM_EA_WRITE_An                                                  9'd92
-`define MICROPC_CHK                                                                  9'd281
-`define MICROPC_Scc                                                                  9'd355
-`define MICROPC_JMP                                                                  9'd442
+`define MICROPC_CHK                                                                  9'd282
+`define MICROPC_Scc                                                                  9'd356
+`define MICROPC_JMP                                                                  9'd443
 `define MICROPC_PEA                                                                  9'd168
 `define MICROPC_SAVE_EA_minus_An                                                     9'd97
 `define MICROPC_ANDI_EORI_ORI_ADDI_SUBI                                              9'd174
-`define MICROPC_BCHG_BCLR_BSET_immediate                                             9'd310
+`define MICROPC_BCHG_BCLR_BSET_immediate                                             9'd311
 `define MICROPC_LOAD_EA_An                                                           9'd62
 `define MICROPC_PERFORM_EA_READ_imm                                                  9'd87
-`define MICROPC_ADD_to_Dn_SUB_to_Dn_AND_to_Dn_OR_to_Dn                               9'd255
+`define MICROPC_ADD_to_Dn_SUB_to_Dn_AND_to_Dn_OR_to_Dn                               9'd256
 `define MICROPC_LEA                                                                  9'd162
-`define MICROPC_TRAPV                                                                9'd482
-`define MICROPC_LINK                                                                 9'd403
+`define MICROPC_TRAPV                                                                9'd483
+`define MICROPC_LINK                                                                 9'd404
 `define MICROPC_ABCD_SBCD_ADDX_SUBX                                                  9'd189
-`define MICROPC_BCHG_BCLR_BSET_register                                              9'd321
+`define MICROPC_BCHG_BCLR_BSET_register                                              9'd322
 `define MICROPC_PERFORM_EA_READ_Dn                                                   9'd85
 `define MICROPC_LOAD_EA_illegal_command                                              9'd83
 `define MICROPC_ORI_to_CCR_ORI_to_SR_ANDI_to_CCR_ANDI_to_SR_EORI_to_CCR_EORI_to_SR   9'd178
-`define MICROPC_CMP                                                                  9'd262
-`define MICROPC_SWAP_EXT                                                             9'd340
-`define MICROPC_STOP                                                                 9'd488
+`define MICROPC_CMP                                                                  9'd263
+`define MICROPC_SWAP_EXT                                                             9'd341
+`define MICROPC_STOP                                                                 9'd489
 `define MICROPC_PERFORM_EA_WRITE_memory                                              9'd93
-`define MICROPC_JSR                                                                  9'd450
+`define MICROPC_JSR                                                                  9'd451
 `define MICROPC_LOAD_EA_minus_An                                                     9'd63
-`define MICROPC_ASL_LSL_ROL_ROXL_ASR_LSR_ROR_ROXR_all_immediate_register             9'd212
+`define MICROPC_ASL_LSL_ROL_ROXL_ASR_LSR_ROR_ROXR_all_immediate_register             9'd213
 `define MICROPC_SAVE_EA_An_plus                                                      9'd95
 `define MICROPC_LOAD_EA_d16_An                                                       9'd65
 `define MICROPC_LOAD_EA_An_plus                                                      9'd62
@@ -2772,11 +2773,11 @@ wire rbit = (`Dm & decoder_alu_reg[12]) | (operand1[0] & decoder_alu_reg[14]) | 
 
 always @(posedge clock or negedge reset_n) begin
     if(reset_n == 1'b0) begin
-        sr <= { 1'b0, 1'b0, 1'b1, 2'b0, 3'b111, 8'b0 };
-        result <= 32'd0;
-        alu_signal <= 1'b0;
+        sr                  <= { 1'b0, 1'b0, 1'b1, 2'b0, 3'b111, 8'b0 };
+        result              <= 32'd0;
+        alu_signal          <= 1'b0;
         interrupt_mask_copy <= 3'b0;
-        was_interrupt <= 1'b0;
+        was_interrupt       <= 1'b0;
     end
     else begin
         case(alu_control)
@@ -2892,16 +2893,31 @@ always @(posedge clock or negedge reset_n) begin
                     // X not affected
                 end
             end
-
-            `ALU_ABCD_SBCD_ADDX_SUBX: begin // 259 LE
+            
+            `ALU_ABCD_SBCD_ADDX_SUBX_prepare: begin
                 // ABCD
-                if( ir[14:12] == 3'b100 ) begin
+                if( ir[14:12] == 3'b100) begin
                     result[13:8] = {1'b0, operand1[3:0]} + {1'b0, operand2[3:0]} + {4'b0, sr[4]};
                     result[19:14] = {1'b0, operand1[7:4]} + {1'b0, operand2[7:4]};
                     
                     result[31:23] = operand1[7:0] + operand2[7:0] + {7'b0, sr[4]};
                     
                     result[13:8] = (result[13:8] > 6'd9) ? (result[13:8] + 6'd6) : result[13:8];
+                end
+                // SBCD
+                else if( ir[14:12] == 3'b000 ) begin
+                    result[13:8] = 6'd32 + {2'b0, operand1[3:0]} - {2'b0, operand2[3:0]} - {5'b0, sr[4]};
+                    result[19:14] = 6'd32 + {2'b0, operand1[7:4]} - {2'b0, operand2[7:4]};
+                    
+                    result[31:23] = operand1[7:0] - operand2[7:0] - {7'b0, sr[4]};
+                    
+                    result[13:8] = (result[13:8] < 6'd32) ? (result[13:8] - 6'd6) : result[13:8];
+                end
+            end
+            
+            `ALU_ABCD_SBCD_ADDX_SUBX: begin
+                // ABCD
+                if( ir[14:12] == 3'b100) begin
                     result[19:14] = (result[13:8] > 6'h1F) ? (result[19:14] + 6'd2) :
                                     (result[13:8] > 6'h0F) ? (result[19:14] + 6'd1) :
                                     result[19:14];
@@ -2920,12 +2936,6 @@ always @(posedge clock or negedge reset_n) begin
                 end
                 // SBCD
                 else if( ir[14:12] == 3'b000 ) begin
-                    result[13:8] = 6'd32 + {2'b0, operand1[3:0]} - {2'b0, operand2[3:0]} - {5'b0, sr[4]};
-                    result[19:14] = 6'd32 + {2'b0, operand1[7:4]} - {2'b0, operand2[7:4]};
-                    
-                    result[31:23] = operand1[7:0] - operand2[7:0] - {7'b0, sr[4]};
-                    
-                    result[13:8] = (result[13:8] < 6'd32) ? (result[13:8] - 6'd6) : result[13:8];
                     result[19:14] = (result[13:8] < 6'd16) ? (result[19:14] - 6'd2) :
                                     (result[13:8] < 6'd32) ? (result[19:14] - 6'd1) :
                                     result[19:14];
@@ -2943,29 +2953,28 @@ always @(posedge clock or negedge reset_n) begin
                     sr[1] <= (result[30] == 1'b1 && result[7] == 1'b0) ? 1'b1 : 1'b0;
                 end
                 // ADDX
-                else if( ir[14:12] == 3'b101 ) result[31:0] = operand1[31:0] + operand2[31:0] + sr[4];
-                // SUBX
-                else if( ir[14:12] == 3'b001 ) result[31:0] = operand1[31:0] - operand2[31:0] - sr[4];
-
-                // Z
-                sr[2] <= sr[2] & `Z;
-                // N
-                sr[3] <= `Rm;
-
-                // ADDX
-                if(ir[14:12] == 3'b101 ) begin
+                else if( ir[14:12] == 3'b101 ) begin
+                    result[31:0] = operand1[31:0] + operand2[31:0] + sr[4];
+                    
                     // C,X,V
                     sr[0] <= (`Sm & `Dm) | (~`Rm & `Dm) | (`Sm & ~`Rm);
                     sr[4] <= (`Sm & `Dm) | (~`Rm & `Dm) | (`Sm & ~`Rm); //=ccr[0];
                     sr[1] <= (`Sm & `Dm & ~`Rm) | (~`Sm & ~`Dm & `Rm);
                 end
                 // SUBX
-                else if(ir[14:12] == 3'b001 ) begin
+                else if( ir[14:12] == 3'b001 ) begin
+                    result[31:0] = operand1[31:0] - operand2[31:0] - sr[4];
+                    
                     // C,X,V
                     sr[0] <= (`Sm & ~`Dm) | (`Rm & ~`Dm) | (`Sm & `Rm);
                     sr[4] <= (`Sm & ~`Dm) | (`Rm & ~`Dm) | (`Sm & `Rm); //=ccr[0];
                     sr[1] <= (~`Sm & `Dm & ~`Rm) | (`Sm & ~`Dm & `Rm);
                 end
+                
+                // Z
+                sr[2] <= sr[2] & `Z;
+                // N
+                sr[3] <= `Rm;
             end
 
             `ALU_ASL_LSL_ROL_ROXL_ASR_LSR_ROR_ROXR_prepare: begin

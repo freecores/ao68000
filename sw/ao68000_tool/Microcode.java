@@ -726,6 +726,7 @@ public class Microcode {
         p       .BRANCH_procedure().PROCEDURE_call_load_ea();
         p       .BRANCH_procedure().PROCEDURE_call_perform_ea_read();
 
+        p       .ALU_ABCD_SBCD_ADDX_SUBX_prepare();
         p       .ALU_ABCD_SBCD_ADDX_SUBX()
                 .BRANCH_procedure().PROCEDURE_call_write();
 
