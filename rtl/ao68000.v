@@ -1197,8 +1197,8 @@ always @(posedge CLK_I or negedge reset_n) begin
                     if(prefetch_ir_valid_32_o == 1'b0)                      ADR_O <= pc_i[31:2];
                     else                                                    ADR_O <= pc_i_plus_6[31:2];
                     
-                    SEL_O <=    (pc_i[1:0] == 2'b10)?   4'b0011 :
-                                                        4'b1111;
+                    SEL_O <= (prefetch_ir_valid_32_o == 1'b0 && pc_i[1:0] == 2'b10)?    4'b0011 :
+                                                                                        4'b1111;
                     STB_O <= 1'b1;
 
                     if(prefetch_ir_valid_32_o == 1'b0) begin
